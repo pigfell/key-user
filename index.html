@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOANH THU THÁNG VPOPI-MEDIA TEAM💻</title>
+<title>DOANH THU VPOPI MEDIA TEAM</title>
 <style>
 :root{
   --bg:#0b1020; --bg2:#0f172a; --panel:rgba(20,29,53,.72); --panel-solid:#131b33;
@@ -40,6 +40,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:14p
 .clock small{display:block;color:var(--muted);font-size:.75rem}
 .tgdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#475569;margin-right:6px}
 .tgdot.on{background:var(--green);box-shadow:0 0 10px var(--green)}
+.tgdot.bad{background:var(--red);box-shadow:0 0 10px var(--red)}
 
 /* STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr) 1.4fr;gap:12px;margin-bottom:16px}
@@ -176,7 +177,7 @@ tfoot td{border-top:2px solid var(--line);border-bottom:0}
     <div class="logo">⚡</div>
     <div><h1>POS SIÊU VIP <span style="color:var(--cyan)">· ALL-IN-ONE</span></h1><small id="shopLine">Bán hàng · Hóa đơn · Telegram Bot</small></div>
   </div>
-  <div class="clock"><span id="tgState"><span class="tgdot"></span>Đang kiểm tra bot...</span><div id="clock">--:--:--</div><small id="today"></small></div>
+  <div class="clock"><span id="ghState" style="margin-right:14px"></span><span id="tgState"><span class="tgdot"></span>Bot tắt</span><div id="clock">--:--:--</div><small id="today"></small></div>
 </header>
 
 <section class="stats">
@@ -194,6 +195,7 @@ tfoot td{border-top:2px solid var(--line);border-bottom:0}
   <button data-t="prod">📦 Sản phẩm</button>
   <button data-t="note">📝 Ghi chú</button>
   <button data-t="tele">🤖 Telegram Bot</button>
+  <button data-t="cloud">☁️ Đồng bộ</button>
   <button data-t="set">⚙️ Cài đặt</button>
 </nav>
 
@@ -304,7 +306,7 @@ tfoot td{border-top:2px solid var(--line);border-bottom:0}
     <h2>📦 Danh mục sản phẩm nhanh <span class="sp"></span><span class="hint">Bấm vào chip ở tab Bán hàng để thêm vào giỏ</span></h2>
     <div class="r3" style="grid-template-columns:2fr 1.2fr auto">
       <div><label>Tên sản phẩm</label><input id="p-name" placeholder="VD: sub fl tiktok"></div>
-      <div><label>Đơn giá</label><input id="p-price" type="number" placeholder="360000"></div>
+      <div><label>Đơn giá</label><input id="p-price" type="text" inputmode="text" placeholder="360000 hoặc 360k" onkeydown="if(event.key==='Enter')addProduct()"></div>
       <button class="btn pri" onclick="addProduct()">＋ Lưu SP</button>
     </div>
     <div class="tw" style="margin-top:14px"><table style="min-width:420px">
@@ -326,30 +328,38 @@ tfoot td{border-top:2px solid var(--line);border-bottom:0}
 <!-- ===== TELEGRAM ===== -->
 <section class="tab" id="tab-tele">
 <div class="grid" style="grid-template-columns:1fr 1fr">
-  <div class="panel">
-    <h2>🤖 Trạng thái bot Telegram</h2>
-    <div id="bot-status"></div>
-    <h2 style="margin-top:22px">🚀 Cài đặt (làm 1 lần)</h2>
-    <ol class="steps">
-      <li>Cài <b>Node.js</b> bản LTS (nodejs.org).</li>
-      <li>Để <code>index.html</code>, <code>bot.js</code>, <code>start.bat</code> chung <b>một thư mục</b>.</li>
-      <li>Trên Telegram mở <b>@BotFather</b> → <code>/newbot</code> → copy <b>token</b>.</li>
-      <li>Bấm đúp <code>start.bat</code> (hoặc chạy <code>node bot.js</code>). Lần đầu nó tạo file <code>config.json</code> → dán token vào ô <code>"token"</code> → chạy lại.</li>
-      <li>Cửa sổ đen hiện <b>mã 6 số</b>. Nhắn cho bot: <code>/start 123456</code> để ghép nối tài khoản của bạn.</li>
-      <li>Luôn mở web bằng <b><code>http://localhost:3000</code></b> (đừng mở file trực tiếp) để đơn từ bot tự hiện ở đây.</li>
-    </ol>
-    <p class="hint">Bot chạy ở cửa sổ đen nên <b>không cần mở web</b> vẫn nhận và tạo đơn; chỉ cần máy đang bật và cửa sổ đó không đóng. Muốn chạy 24/7 thì đem <code>bot.js</code> lên VPS/máy chủ riêng.</p>
-    <p class="hint">⚠️ Nếu trạng thái báo <i>không kết nối được Telegram</i>: nhiều nhà mạng ở Việt Nam chặn Telegram → bật VPN, hoặc điền <code>"proxy"</code> trong <code>config.json</code> (VD <code>http://127.0.0.1:10809</code>).</p>
+  <div>
+    <div class="panel">
+      <h2>🤖 Bot Telegram chạy ngay trong trang này</h2>
+      <p class="hint" style="margin-top:-6px">Chỉ cần file <b>index.html</b> — không cài gì thêm. Bot hoạt động khi tab này đang mở.</p>
+      <div class="fg"><label>Bot Token (lấy từ @BotFather → /newbot)</label><input id="wb-token" type="password" placeholder="123456789:AAxxxxxxxxxxxxxxxx" autocomplete="off"></div>
+      <div class="fg"><label>Chat ID được phép tạo đơn (tự điền khi ghép nối, nhiều ID cách nhau dấu phẩy)</label><input id="wb-chats" placeholder="Để trống rồi nhắn /start MÃ cho bot"></div>
+      <div class="fg"><label>Địa chỉ API (tuỳ chọn — để mặc định nếu không dùng proxy)</label><input id="wb-api" placeholder="https://api.telegram.org"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="btn grn" onclick="wbStart()">▶ Bật bot</button>
+        <button class="btn red" onclick="WB.stop()">■ Tắt bot</button>
+        <button class="btn gho" onclick="wbSaveFields();WB.test()">🔌 Kiểm tra token</button>
+        <button class="btn vio" onclick="WB.newPair()">🔑 Mã ghép nối mới</button>
+      </div>
+      <div id="wb-status"></div>
+      <ol class="steps">
+        <li>Dán token → bấm <b>Bật bot</b>. Lần đầu sẽ hiện <b>mã 6 số</b> (muốn thêm người dùng bot thứ hai: bấm <b>Mã ghép nối mới</b>).</li>
+        <li>Mở Telegram, nhắn cho bot: <code>/start 123456</code> (mã vừa hiện) → bot ghép nối tài khoản của bạn.</li>
+        <li>Xong! Bấm <b>🛒 Tạo đơn mới</b> trong Telegram. Đơn hiện ở web ngay.</li>
+      </ol>
+      <p class="hint">⚠️ Nếu báo <i>không gọi được Telegram</i>: nhiều nhà mạng ở Việt Nam chặn Telegram → bật VPN rồi bấm Bật bot lại. Token lưu trong trình duyệt này — đừng chia sẻ file sao lưu. Mỗi bot chỉ bật được ở <b>MỘT thiết bị</b> (nên là máy tính luôn mở trang này); các máy khác chỉ cần kết nối GitHub ở tab ☁️ để xem và chốt đơn. Điện thoại hay tự tắt tab nền nên không hợp chạy bot.</p>
+      <div class="log" id="wb-log" style="height:160px"></div>
+    </div>
   </div>
   <div class="panel">
     <h2>⚡ Dùng trong Telegram</h2>
     <ol class="steps">
-      <li>Bấm <b>🛒 Tạo đơn mới</b> → chạm sản phẩm (chạm lại để tăng số lượng) → nút <b>➖ ➕</b> chỉnh số lượng.</li>
+      <li>Bấm <b>🛒 Tạo đơn mới</b> → chạm sản phẩm (chạm lại để tăng số lượng) → <b>➖ ➕</b> chỉnh số lượng.</li>
       <li>Chọn <b>👤 Khách</b>, 📞 SĐT, 🏢 MST, 🎁 Giảm giá nếu cần; chọn thanh toán 💵 🏦 💳 📱.</li>
       <li>Bấm <b>✅ XUẤT HÓA ĐƠN</b> → bot gửi hóa đơn chữ → <b>chạm vào hóa đơn để sao chép</b> → dán gửi khách.</li>
       <li>Đơn tự vào <b>Lịch sử</b> và <b>Doanh thu</b> trên web.</li>
     </ol>
-    <p class="hint">Món không có trong danh mục: bấm <b>✏️ Món khác</b> rồi gõ <code>tên sl giá</code>. Hoặc gõ thẳng một lần:</p>
+    <p class="hint">Danh mục sản phẩm lấy từ tab 📦 Sản phẩm. Món lạ: bấm <b>✏️ Món khác</b> rồi gõ <code>tên sl giá</code>. Hoặc gõ thẳng một lần:</p>
 <pre class="code">sub fl tiktok 1 360k
 kh: Chị Nguyệt
 ck</pre>
@@ -362,6 +372,50 @@ ck</pre>
 /them sub fl tiktok 360k   thêm sản phẩm nhanh
 /sp  /xoasp 2  xem / xoá sản phẩm
 /note nội dung ghi chú</pre>
+  </div>
+</div>
+</section>
+
+<!-- ===== ĐỒNG BỘ GITHUB ===== -->
+<section class="tab" id="tab-cloud">
+<div class="grid" style="grid-template-columns:1fr 1fr">
+  <div class="panel">
+    <h2>☁️ Lưu database lên GitHub</h2>
+    <p class="hint" style="margin-top:-6px">Đơn hàng, sản phẩm, ghi chú, doanh thu được lưu thành 1 file JSON trong repo <b>Private</b> của bạn. Máy / điện thoại nào nhập cùng thông tin dưới đây sẽ thấy <b>y hệt dữ liệu</b>, tự cập nhật khoảng 20 giây một lần (đơn mới từ bot Telegram cũng vậy).</p>
+    <div class="fg"><label>GitHub Token (fine-grained, quyền Contents: Read and write)</label><input id="gh-token" type="password" placeholder="github_pat_xxxxxxxx..." autocomplete="off"></div>
+    <div class="fg"><label>Repo lưu dữ liệu (dạng  tên-github/tên-repo)</label><input id="gh-repo" placeholder="vpopi/pos-data"></div>
+    <div class="row">
+      <div class="fg"><label>Tên file dữ liệu</label><input id="gh-path" placeholder="pos-data.json"></div>
+      <div class="fg"><label>Branch (để trống = mặc định)</label><input id="gh-branch" placeholder="main"></div>
+    </div>
+    <details style="margin-bottom:12px"><summary class="hint" style="cursor:pointer">Nâng cao</summary>
+      <div class="fg" style="margin-top:8px"><label>Địa chỉ API GitHub (không đổi nếu dùng github.com)</label><input id="gh-api" placeholder="https://api.github.com"></div></details>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn grn" onclick="ghConnect()">▶ Kết nối & đồng bộ</button>
+      <button class="btn pri" onclick="ghSync()">🔄 Đồng bộ ngay</button>
+      <button class="btn red" onclick="ghDisconnect()">⏏ Ngắt</button>
+    </div>
+    <div id="gh-status"></div>
+    <h2 style="margin-top:20px">📲 Kết nối nhanh máy khác</h2>
+    <p class="hint" style="margin-top:-6px">Đang kết nối ở máy này → bấm Copy mã → sang điện thoại dán vào ô dưới.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px"><button class="btn vio" onclick="ghCopyCode()">📋 Copy mã kết nối</button></div>
+    <div style="display:flex;gap:10px"><input id="gh-code" placeholder="Dán mã POSGH1.… vào đây"><button class="btn gho" onclick="ghUseCode()">Dùng mã</button></div>
+    <p class="hint" style="margin-top:10px">⚠️ Mã kết nối chứa token — chỉ gửi cho chính bạn, đừng đăng ở đâu cả. Token Telegram <b>không</b> được đưa lên GitHub.</p>
+  </div>
+  <div class="panel">
+    <h2>🧭 Cài đặt (làm 1 lần, ~3 phút)</h2>
+    <ol class="steps">
+      <li>Vào <b>github.com/new</b> → đặt tên (VD <code>pos-data</code>) → chọn <b>Private</b> → Create repository.</li>
+      <li>Vào <b>github.com/settings/personal-access-tokens/new</b> (Fine-grained token):
+        <br>• <b>Repository access</b> → <i>Only select repositories</i> → chọn repo vừa tạo.
+        <br>• <b>Permissions → Repository permissions → Contents → Read and write</b>.
+        <br>• Bấm Generate token → copy chuỗi <code>github_pat_…</code>.</li>
+      <li>Dán token + <code>tên-github/pos-data</code> vào bên trái → <b>Kết nối & đồng bộ</b>. File dữ liệu tự được tạo.</li>
+      <li>Điện thoại / máy khác: mở trang này → dán <b>mã kết nối</b> (hoặc nhập 2 ô trên) → thấy toàn bộ đơn.</li>
+    </ol>
+    <p class="hint"><b>Cách hoạt động:</b> mỗi lần bạn (hoặc bot) tạo / xoá đơn, trang tự đẩy lên GitHub sau ~1 giây và kéo thay đổi của máy khác về. Hai máy sửa cùng lúc sẽ được <b>trộn lại, không mất đơn nào</b>; đơn đã xoá ở máy này sẽ biến mất ở máy kia. Mất mạng vẫn dùng bình thường, có mạng lại tự đồng bộ.</p>
+    <p class="hint"><b>Để trang chạy trên điện thoại:</b> đặt <code>index.html</code> vào một repo <b>công khai riêng</b> (không chứa dữ liệu) và bật GitHub Pages → mở link đó trên mọi máy. Repo dữ liệu vẫn để Private. Hoặc cứ gửi file <code>index.html</code> qua Zalo cho điện thoại và mở bằng trình duyệt.</p>
+    <p class="hint">Dữ liệu trong repo là chữ thường (JSON) nên ai có quyền vào repo đều đọc được — hãy để Private và không thêm người lạ.</p>
   </div>
 </div>
 </section>
@@ -404,7 +458,8 @@ ck</pre>
 /* ============ DỮ LIỆU ============ */
 const KEY = 'pos_vip_v2';
 const DEF = () => ({ orders: [], products: [], notes: [],
-  settings: { shop:'VPOPI Media', footer:'Cảm ơn quý khách!', vat:0, prefix:'HD', next:1 } });
+  deleted: { orders: {}, products: {}, notes: {} }, settingsAt: 0,
+  settings: { shop:'VPOPI Media', footer:'Cảm ơn quý khách!', vat:0, prefix:'HD', next:1, tgToken:'', tgChats:'', tgApi:'', tgOffset:0, tgOn:false, ghToken:'', ghRepo:'', ghPath:'pos-data.json', ghBranch:'', ghApi:'' } });
 let DB = loadDB();
 let cart = [];
 
@@ -424,9 +479,61 @@ function loadDB() {
       }
     }
   } catch (e) { console.warn(e); }
-  return d;
+  return fixDB(d);
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { toast('⚠️ Không lưu được dữ liệu: ' + e.message); } pushSoon(); }
+/* ---- dữ liệu dùng chung nhiều thiết bị: định danh, "bia mộ" khi xoá, trộn dữ liệu ---- */
+const LOCAL_KEYS = ['tgToken', 'tgChats', 'tgApi', 'tgOffset', 'tgOn', 'ghToken', 'ghRepo', 'ghPath', 'ghBranch', 'ghApi']; // chỉ nằm trên từng máy, KHÔNG đưa lên GitHub
+const numOf = id => parseInt(String(id).replace(/\D/g, ''), 10) || 0;
+const oid = o => o.uid || (o.id + '|' + o.ts);
+function stamp(o) { if (!o.uid) o.uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8); o.v = o.v || 0; return o; }
+function fixDB(d) {
+  d.orders = Array.isArray(d.orders) ? d.orders : []; d.products = Array.isArray(d.products) ? d.products : []; d.notes = Array.isArray(d.notes) ? d.notes : [];
+  d.settings = d.settings || {}; const dl = d.deleted = d.deleted || {}; ['orders', 'products', 'notes'].forEach(k => dl[k] = dl[k] || {});
+  d.settingsAt = +d.settingsAt || 0; d.products.forEach(p => { p.ts = +p.ts || 0; }); return d;
+}
+function viewOf(d) { // bản "chuẩn hoá" để đưa lên GitHub và để so sánh
+  const s = {}; Object.keys(d.settings || {}).filter(k => !LOCAL_KEYS.includes(k)).sort().forEach(k => s[k] = d.settings[k]);
+  const dl = {}; ['orders', 'products', 'notes'].forEach(k => { dl[k] = {}; Object.keys((d.deleted || {})[k] || {}).sort().forEach(x => dl[k][x] = d.deleted[k][x]); });
+  return { v: 2, settingsAt: +d.settingsAt || 0, settings: s,
+    orders: (d.orders || []).map(o => ({ ...o, uid: oid(o), v: o.v || 0 })).sort((a, b) => a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0),
+    products: (d.products || []).map(p => ({ name: p.name, price: p.price, ts: +p.ts || 0 })).sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1),
+    notes: [...(d.notes || [])].sort((a, b) => String(a.id) < String(b.id) ? -1 : 1), deleted: dl };
+}
+function exportDB() { const c = JSON.parse(JSON.stringify(DB)); LOCAL_KEYS.forEach(k => delete c.settings[k]); return c; }
+function freshId(used) { let n = Math.max(+DB.settings.next || 1, ...[...used].map(numOf).map(x => x + 1)), id; do { id = DB.settings.prefix + String(n).padStart(4, '0'); n++; } while (used.has(id)); return id; }
+function removeOrder(o) { DB.deleted.orders[oid(o)] = Date.now(); DB.orders = DB.orders.filter(x => x !== o); }
+function tombProduct(p) { DB.deleted.products[p.name.toLowerCase()] = Date.now(); }
+function mergeState(rem) { // trộn dữ liệu từ máy khác vào máy này: không mất đơn nào, đơn đã xoá không "sống lại"
+  rem = fixDB(rem || {}); const dl = DB.deleted, info = { renum: [], settingsChanged: false };
+  ['orders', 'products', 'notes'].forEach(k => { const r = rem.deleted[k] || {}; for (const key in r) dl[k][key] = Math.max(dl[k][key] || 0, r[key]); });
+  const by = new Map();
+  for (const o of [...DB.orders, ...rem.orders]) { const k = oid(o); if (dl.orders[k]) continue; const ex = by.get(k); if (!ex || (o.v || 0) >= (ex.v || 0)) by.set(k, o); }
+  const list = [...by.values()], used = new Set(list.map(o => o.id)), groups = new Map();
+  list.forEach(o => { if (!groups.has(o.id)) groups.set(o.id, []); groups.get(o.id).push(o); });
+  groups.forEach((arr, id) => { if (arr.length < 2) return; // 2 máy cùng lúc tạo trùng mã → đơn tạo sau được đổi mã
+    arr.sort((a, b) => ((a.ts || 0) - (b.ts || 0)) || (oid(a) < oid(b) ? -1 : 1));
+    arr.slice(1).forEach(o => { const nid = freshId(used); used.add(nid); list[list.indexOf(o)] = { ...o, id: nid, v: (o.v || 0) + 1, uid: oid(o) }; info.renum.push([id, nid]); }); });
+  DB.orders = list.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  const pm = new Map(); for (const p of [...DB.products, ...rem.products]) { const k = p.name.toLowerCase(), ex = pm.get(k); if (!ex || (p.ts || 0) >= (ex.ts || 0)) pm.set(k, p); }
+  DB.products = [...pm.values()].filter(p => !((dl.products[p.name.toLowerCase()] || 0) >= (p.ts || 0) && dl.products[p.name.toLowerCase()]));
+  const nm = new Map(); for (const n of [...DB.notes, ...rem.notes]) { const k = String(n.id); if (!dl.notes[k] && !nm.has(k)) nm.set(k, n); }
+  DB.notes = [...nm.values()].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  if ((rem.settingsAt || 0) > (DB.settingsAt || 0)) { Object.keys(rem.settings).forEach(k => { if (!LOCAL_KEYS.includes(k)) DB.settings[k] = rem.settings[k]; }); DB.settingsAt = rem.settingsAt; info.settingsChanged = true; }
+  DB.settings.next = Math.max(+DB.settings.next || 1, +rem.settings.next || 1, ...DB.orders.map(o => numOf(o.id) + 1));
+  fixDB(DB); return info;
+}
+function replaceAll(nd) { // khôi phục / reset: ghi đè dữ liệu nhưng vẫn báo cho các máy khác biết thứ nào đã bị xoá
+  nd = fixDB({ ...DEF(), ...nd, settings: { ...DEF().settings, ...(nd.settings || {}) } }); const now = Date.now(), dl = DB.deleted;
+  const nk = new Set(nd.orders.map(oid)), pk = new Set(nd.products.map(p => p.name.toLowerCase())), ek = new Set(nd.notes.map(n => String(n.id)));
+  DB.orders.forEach(o => { if (!nk.has(oid(o))) dl.orders[oid(o)] = now; });
+  DB.products.forEach(p => { const k = p.name.toLowerCase(); if (!pk.has(k)) dl.products[k] = now; });
+  DB.notes.forEach(n => { if (!ek.has(String(n.id))) dl.notes[String(n.id)] = now; });
+  nk.forEach(k => delete dl.orders[k]); pk.forEach(k => delete dl.products[k]); ek.forEach(k => delete dl.notes[k]);
+  ['orders', 'products', 'notes'].forEach(k => { nd.deleted[k] = { ...nd.deleted[k], ...dl[k] }; Object.keys(nd.deleted[k]).forEach(x => { if ((k === 'orders' && nk.has(x)) || (k === 'products' && pk.has(x)) || (k === 'notes' && ek.has(x))) delete nd.deleted[k][x]; }); });
+  nd.products.forEach(p => { p.ts = now; }); nd.orders.forEach(o => { o.uid = oid(o); o.v = o.v || 0; });
+  LOCAL_KEYS.forEach(k => { nd.settings[k] = DB.settings[k]; }); nd.settingsAt = now; DB = nd;
+}
 
 /* ============ TIỆN ÍCH ============ */
 const $ = id => document.getElementById(id);
@@ -617,7 +724,7 @@ async function doCopy(silent) {
   if (!silent) toast(ok ? '✅ Đã sao chép hóa đơn — dán (Ctrl+V) vào Zalo/Facebook' : '❌ Trình duyệt chặn copy');
   return ok;
 }
-function commit(o) { DB.orders.push(o); bumpNext(o.id); save(); }
+function commit(o) { DB.orders.push(stamp(o)); bumpNext(o.id); save(); }
 async function checkout(mode) {
   const o = draftOrder();
   if (!o.items.length) return toast('Chưa có sản phẩm nào!');
@@ -677,16 +784,16 @@ function viewOrder(id) { const o = findOrder(id); if (!o) return;
 function closeModal() { $('modal').classList.remove('on'); }
 async function copyOrder(id) { const o = findOrder(id); if (o) { await copyText(receiptText(o)); toast('✅ Đã sao chép ' + id); } }
 function delOrder(id) { if (!confirm('Xoá đơn ' + id + '? Doanh thu sẽ bị trừ tương ứng.')) return;
-  DB.orders = DB.orders.filter(o => o.id !== id); save(); renderAll(); }
+  { const o = DB.orders.find(x => x.id === id); if (o) removeOrder(o); } save(); renderAll(); }
 
 function addProduct() { const name = $('p-name').value.trim(), price = parseMoney($('p-price').value);
   if (!name || isNaN(price)) return toast('Nhập tên và giá hợp lệ');
-  const ex = DB.products.find(p => p.name.toLowerCase() === name.toLowerCase()); if (ex) ex.price = price; else DB.products.push({ name, price });
+  const ex = DB.products.find(p => p.name.toLowerCase() === name.toLowerCase()); if (ex) { ex.price = price; ex.ts = Date.now(); } else DB.products.push({ name, price, ts: Date.now() });
   $('p-name').value = ''; $('p-price').value = ''; save(); renderAll(); }
 function renderProducts() { $('p-body').innerHTML = DB.products.length ? DB.products.map((p, i) => `<tr><td>${esc(p.name)}</td><td class="money num">${fm(p.price)} ₫</td>
   <td style="text-align:right"><button class="btn gho sm" onclick="delProduct(${i})">🗑</button></td></tr>`).join('')
   : '<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Chưa có sản phẩm</td></tr>'; }
-function delProduct(i) { DB.products.splice(i, 1); save(); renderAll(); }
+function delProduct(i) { const p = DB.products[i]; if (p) tombProduct(p); DB.products.splice(i, 1); save(); renderAll(); }
 
 function addNote(text, silent) { text = (text ?? $('n-text').value).trim(); if (!text) return toast('Ghi chú trống');
   DB.notes.unshift({ id: Date.now() + Math.random(), ts: Date.now(), text }); $('n-text').value = ''; save(); renderNotes(); if (!silent) toast('📝 Đã lưu ghi chú'); }
@@ -694,23 +801,25 @@ function renderNotes() { const q = $('n-search').value.trim().toLowerCase();
   const l = DB.notes.filter(n => !q || n.text.toLowerCase().includes(q));
   $('n-list').innerHTML = l.length ? l.map(n => `<div class="note"><div><div class="t">${esc(n.text)}</div><small>${fmtDate(new Date(n.ts))}</small></div>
     <button class="btn gho sm" onclick="delNote('${n.id}')">🗑</button></div>`).join('') : '<p class="hint">Chưa có ghi chú.</p>'; }
-function delNote(id) { DB.notes = DB.notes.filter(n => String(n.id) !== String(id)); save(); renderNotes(); }
+function delNote(id) { DB.deleted.notes[String(id)] = Date.now(); DB.notes = DB.notes.filter(n => String(n.id) !== String(id)); save(); renderNotes(); }
 
 /* ============ CÀI ĐẶT / SAO LƯU ============ */
 function loadSettingsUI() { const s = DB.settings;
   $('s-shop').value = s.shop; $('s-footer').value = s.footer; $('s-prefix').value = s.prefix; $('s-next').value = s.next; $('s-vat').value = s.vat;
+  $('wb-token').value = s.tgToken || ''; $('wb-chats').value = s.tgChats || ''; $('wb-api').value = s.tgApi || '';
+  $('gh-token').value = s.ghToken || ''; $('gh-repo').value = s.ghRepo || ''; $('gh-path').value = s.ghPath || 'pos-data.json'; $('gh-branch').value = s.ghBranch || ''; $('gh-api').value = s.ghApi || '';
   $('shopLine').textContent = s.shop || 'Bán hàng · Hóa đơn · Telegram Bot'; }
 function saveSettings() { const s = DB.settings;
-  s.shop = $('s-shop').value.trim(); s.footer = $('s-footer').value; s.prefix = ($('s-prefix').value.trim() || 'HD'); s.next = Math.max(1, +$('s-next').value || 1); s.vat = +$('s-vat').value || 0;
+  s.shop = $('s-shop').value.trim(); s.footer = $('s-footer').value; s.prefix = ($('s-prefix').value.trim() || 'HD'); s.next = Math.max(1, +$('s-next').value || 1); s.vat = +$('s-vat').value || 0; DB.settingsAt = Date.now();
   save(); loadSettingsUI(); $('f-id').value = nextId(); $('f-vat').value = s.vat; renderAll(); toast('💾 Đã lưu cài đặt'); }
-function backup() { dl(new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' }), `POS_backup_${dayKey(Date.now())}.json`); }
+function backup() { dl(new Blob([JSON.stringify(exportDB(), null, 2)], { type: 'application/json' }), `POS_backup_${dayKey(Date.now())}.json`); }
 function restore(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
   r.onload = () => { try { const d = JSON.parse(r.result); if (!Array.isArray(d.orders)) throw new Error('File không đúng định dạng');
     if (!confirm('Khôi phục sẽ GHI ĐÈ dữ liệu hiện tại. Tiếp tục?')) return;
-    DB = { ...DEF(), ...d, settings: { ...DEF().settings, ...(d.settings || {}) } }; save(); loadSettingsUI(); clearForm(false); renderAll(); toast('✅ Đã khôi phục'); }
+    replaceAll(d); save(); loadSettingsUI(); clearForm(false); renderAll(); toast('✅ Đã khôi phục'); }
     catch (err) { toast('❌ ' + err.message); } }; r.readAsText(f); e.target.value = ''; }
 function resetAll() { if (!confirm('XOÁ TOÀN BỘ DỮ LIỆU (đơn, sản phẩm, ghi chú, cài đặt)?\n\nHãy sao lưu trước!')) return;
-  DB = DEF(); save(); loadSettingsUI(); clearForm(false); renderAll(); toast('Đã xoá sạch'); }
+  replaceAll(DEF()); save(); loadSettingsUI(); clearForm(false); renderAll(); toast('Đã xoá sạch'); }
 
 /* ============ DOANH THU THEO THÁNG ============ */
 const MN = Array.from({ length: 12 }, (_, i) => 'Tháng ' + (i + 1));
@@ -756,71 +865,429 @@ function exportRevCSV() {
   dl(new Blob(['﻿' + rows.map(r => r.map(x => `"${x}"`).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' }), `DoanhThu_${revYear}.csv`);
 }
 
-/* ============ ĐỒNG BỘ VỚI BOT (bot.js) ============ */
-let SERVER = false, srvRev = 0, pushT = null, pushing = false, again = false;
-const normDB = d => ({ ...DEF(), ...d, settings: { ...DEF().settings, ...(d.settings || {}) } });
-function localCache() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
-function pushSoon() { if (!SERVER) return; clearTimeout(pushT); pushT = setTimeout(push, 350); }
-async function push() {
-  pushT = null; if (pushing) { again = true; return; } pushing = true;
-  try {
-    for (let n = 0; n < 3; n++) {
-      const r = await fetch('api/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseRev: srvRev, state: DB }) });
-      const j = await r.json();
-      if (r.ok) { srvRev = j.rev; break; }
-      if (r.status === 409) { mergeFrom(j.state); srvRev = j.rev; continue; }
-      break;
+/* ============ BOT TELEGRAM CHẠY NGAY TRONG TRANG (không cần cài gì) ============ */
+const WB = (function () {
+  const W = { running: false, bot: '', lastError: '', hint: '', logs: [], pair: '' };
+  let PAIR = '', stopFlag = true, pollCtl = null;
+  const CFG = {
+    get token() { return (DB.settings.tgToken || '').trim(); },
+    get chatIds() { return String(DB.settings.tgChats || '').split(/[,\s;]+/).filter(Boolean); },
+    get apiBase() { return (DB.settings.tgApi || 'https://api.telegram.org').replace(/\/$/, ''); }
+  };
+  const BOT_CMDS = [['start', '🏠 Menu & hướng dẫn'], ['new', '🛒 Tạo đơn mới (chọn bằng nút)'], ['homnay', '📅 Doanh thu hôm nay & các tháng'], ['thang', '📈 Doanh thu các tháng trong năm'], ['lichsu', '🧾 Đơn gần đây'], ['bill', '🔎 Xem lại hóa đơn: /bill HD0003'], ['huy', '🗑 Xoá đơn: /huy HD0003'], ['sp', '📦 Danh sách sản phẩm'], ['them', '➕ Thêm sản phẩm: /them tên giá'], ['xoasp', '➖ Xoá sản phẩm: /xoasp số'], ['note', '📝 Ghi chú nhanh'], ['id', '🪪 Xem Chat ID'], ['help', '❓ Hướng dẫn']].map(([command, description]) => ({ command, description }));
+  const sleepW = ms => new Promise(r => setTimeout(r, ms));
+  function log(...a) { const d = new Date(); W.logs.push(`[${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}] ` + a.join(' ')); if (W.logs.length > 120) W.logs.shift(); renderWebBot(); }
+  function addChat(chat) { const l = CFG.chatIds; if (!l.includes(String(chat))) l.push(String(chat)); DB.settings.tgChats = l.join(', '); save(); loadSettingsUI(); }
+  function persist() { save(); const cur = $('f-id').value; if (!cur || DB.orders.some(o => o.id === cur)) $('f-id').value = nextId(); renderAll(); }
+  async function tg(method, body, ms) {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms || 30000);
+    if (method === 'getUpdates') pollCtl = ctl;
+    try { const r = await fetch(CFG.apiBase + '/bot' + CFG.token + '/' + method, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}), signal: ctl.signal }); return await r.json(); }
+    finally { clearTimeout(t); }
+  }
+  function setErr(e) {
+    W.lastError = String(e && e.message || e);
+    W.hint = /Conflict/i.test(W.lastError) ? 'Đang có chương trình khác dùng chung bot này (tab web khác hoặc máy khác đang bật bot). Chỉ được chạy MỘT nơi cho mỗi bot.'
+      : /Failed to fetch|NetworkError|aborted|Load failed|timeout/i.test(W.lastError) ? 'Trình duyệt không gọi được api.telegram.org. Nhiều nhà mạng ở Việt Nam chặn Telegram: hãy bật VPN rồi bấm Bật bot lại.' : '';
+  }
+  const allowed = chat => CFG.chatIds.map(String).includes(String(chat));
+/* ---------- TIỆN ÍCH ---------- */
+const fm = n => Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const fmtDate = (d = new Date()) => `${p2(d.getDate())}/${p2(d.getMonth() + 1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+const dayKey = d => { d = new Date(d); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`; };
+function odate(o) {
+  const m = String(o.date || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  if (m) { const d = new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)); if (!isNaN(d)) return d; }
+  return new Date(o.ts || Date.now());
+}
+function shortPrice(n) {
+  if (n >= 1e6 && n % 1e5 === 0) return (n / 1e6).toString().replace('.', ',') + 'tr';
+  if (n >= 1000 && n % 1000 === 0) return (n / 1000) + 'k';
+  return fm(n);
+}
+function parseMoney(s) {
+  s = String(s || '').toLowerCase().trim();
+  const m = s.match(/^([\d.,]+)\s*(k|tr|triệu|nghìn|ngàn|đ|d|vnđ|vnd)?$/);
+  if (!m) return NaN;
+  const u = m[2] || '';
+  if (['k', 'nghìn', 'ngàn'].includes(u)) return Math.round(parseFloat(m[1].replace(',', '.')) * 1e3);
+  if (['tr', 'triệu'].includes(u)) return Math.round(parseFloat(m[1].replace(',', '.')) * 1e6);
+  return parseInt(m[1].replace(/[.,]/g, ''), 10);
+}
+const PRICE_RE = '([\\d.,]+\\s*(?:k|tr|triệu|nghìn|ngàn|đ|d|vnđ|vnd)?)';
+function parseItemLine(str) {
+  str = String(str || '').trim(); if (!str) return null;
+  let m, name, qty, price;
+  if ((m = str.match(new RegExp('^(.+?)\\s+(\\d{1,4})\\s*[x*×]\\s*' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = +m[2]; price = parseMoney(m[3]); }
+  else if ((m = str.match(new RegExp('^(.+?)\\s+(\\d{1,4})\\s+' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = +m[2]; price = parseMoney(m[3]); }
+  else if ((m = str.match(new RegExp('^(.+?)\\s+' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = 1; price = parseMoney(m[2]); }
+  else return null;
+  if (!name.trim() || isNaN(price) || qty < 1) return null;
+  return { name: name.trim(), qty, price };
+}
+function calc(items, discount, vatPct, paidRaw) {
+  const sub = items.reduce((s, i) => s + i.qty * i.price, 0);
+  discount = Math.min(Math.max(+discount || 0, 0), sub);
+  const vat = Math.round((sub - discount) * (+vatPct || 0) / 100), total = sub - discount + vat;
+  const paid = (paidRaw === '' || paidRaw == null || isNaN(+paidRaw)) ? total : +paidRaw;
+  return { sub, discount, vat, total, paid, change: Math.max(0, paid - total) };
+}
+function nextId() {
+  const s = DB.settings; let n = Math.max(1, +s.next || 1), id; const used = new Set(DB.orders.map(o => o.id));
+  do { id = s.prefix + String(n).padStart(4, '0'); n++; } while (used.has(id));
+  return id;
+}
+function bumpNext(id) { const n = parseInt(String(id).replace(/\D/g, ''), 10); DB.settings.next = isNaN(n) ? (+DB.settings.next || 1) + 1 : n + 1; }
+function receiptText(o) {
+  const S = DB.settings, L = '-'.repeat(36), t = [];
+  if (S.shop) t.push(S.shop);
+  if (o.phone) t.push('SĐT: ' + o.phone);
+  if (o.mst) t.push('MST: ' + o.mst);
+  t.push('HOÁ ĐƠN BÁN LẺ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
+  o.items.forEach(i => t.push(i.name, `${fm(i.qty)} x ${fm(i.price)}`, fm(i.qty * i.price)));
+  t.push(L);
+  if (o.discount || o.vat) { t.push('Tạm tính', fm(o.sub)); if (o.discount) t.push('Giảm giá', '-' + fm(o.discount)); if (o.vat) t.push(`VAT ${o.vatPct}%`, fm(o.vat)); }
+  t.push('TỔNG CỘNG', fm(o.total));
+  if (o.paid !== o.total) { t.push('Khách trả', fm(o.paid)); if (o.change) t.push('Tiền thừa', fm(o.change)); }
+  t.push('Thanh toán: ' + o.method, L);
+  if (S.footer) t.push(S.footer);
+  return t.join('\n');
+}
+
+const send = (chat, text, extra = {}) => tg('sendMessage', { chat_id: chat, text, parse_mode: 'HTML', disable_web_page_preview: true, ...extra }, 20000).catch(e => { log('Gửi lỗi:', e.message); return { ok: false }; });
+const edit = (chat, mid, text, extra = {}) => tg('editMessageText', { chat_id: chat, message_id: mid, text, parse_mode: 'HTML', disable_web_page_preview: true, ...extra }, 20000).catch(e => ({ ok: false, description: e.message }));
+const del = (chat, mid) => tg('deleteMessage', { chat_id: chat, message_id: mid }, 15000).catch(() => null);
+const answer = (id, text, alert) => tg('answerCallbackQuery', { callback_query_id: id, ...(text ? { text, show_alert: !!alert } : {}) }, 15000).catch(() => null);
+
+/* ---------- GIAO DIỆN BOT ---------- */
+const MENU = { keyboard: [[{ text: '🛒 Tạo đơn mới' }], [{ text: '📊 Doanh thu' }, { text: '🧾 Đơn gần đây' }], [{ text: '📦 Sản phẩm' }, { text: '📝 Ghi chú' }]], resize_keyboard: true, is_persistent: true };
+const MENU_TEXTS = ['🛒 Tạo đơn mới', '📊 Doanh thu', '🧾 Đơn gần đây', '📦 Sản phẩm', '📝 Ghi chú'];
+const METHODS = ['Tiền mặt', 'Chuyển khoản', 'Thẻ', 'Ví điện tử'], MICON = ['💵', '🏦', '💳', '📱'];
+const HELP = `🤖 <b>POS Bot</b>
+
+<b>Cách nhanh nhất:</b> bấm <b>🛒 Tạo đơn mới</b> → chạm sản phẩm → chọn thanh toán → <b>✅ XUẤT HÓA ĐƠN</b>. Chạm vào hóa đơn bot gửi để sao chép rồi dán cho khách.
+
+<b>Hoặc gõ nhanh</b> (mỗi dòng một món):
+<code>sub fl tiktok 1 360k
+áo thun 2x150k
+kh: Chị Nguyệt
+sdt: 0901234567
+gg: 20k
+ck</code>
+Thanh toán: tm · ck · the · vi
+
+<b>Lệnh:</b> /new /homnay /thang /tong /lichsu
+/bill HD0003 · /huy HD0003
+/sp · /them tên giá · /xoasp số
+/note nội dung · /id`;
+
+const drafts = new Map();
+const newDraft0 = () => ({ items: [], name: 'Khách lẻ', phone: '', mst: '', discount: 0, method: 'Tiền mặt', await: null, msgId: null, junk: [] });
+
+function draftText(d) {
+  const c = calc(d.items, d.discount, DB.settings.vat, '');
+  let t = `🧾 <b>ĐƠN NHÁP · ${esc(nextId())}</b>\n👤 ${esc(d.name)}` + (d.phone ? ` · 📞 ${esc(d.phone)}` : '') + (d.mst ? ` · MST ${esc(d.mst)}` : '') + '\n\n';
+  t += d.items.length ? d.items.map((i, k) => `${k + 1}. ${esc(i.name)}\n    ${i.qty} x ${fm(i.price)} = <b>${fm(i.qty * i.price)}</b>`).join('\n') + '\n'
+    : '<i>Chưa có món nào — chạm sản phẩm bên dưới hoặc "✏️ Món khác"</i>\n';
+  if (c.discount) t += `\n🎁 Giảm giá: -${fm(c.discount)}`;
+  if (c.vat) t += `\n🧮 VAT ${DB.settings.vat}%: ${fm(c.vat)}`;
+  return t + `\n\n💰 <b>TỔNG: ${fm(c.total)} ₫</b>\n${MICON[METHODS.indexOf(d.method)] || '💳'} ${esc(d.method)}`;
+}
+function draftKb(d) {
+  const kb = [], prods = DB.products.slice(0, 20);
+  for (let i = 0; i < prods.length; i += 2) kb.push(prods.slice(i, i + 2).map((p, j) => ({ text: `➕ ${p.name.slice(0, 18)} · ${shortPrice(p.price)}`, callback_data: 'p:' + (i + j) })));
+  d.items.slice(0, 10).forEach((it, k) => kb.push([{ text: '➖', callback_data: 'q-:' + k }, { text: `${it.name.slice(0, 16)} ×${it.qty}`, callback_data: 'noop' }, { text: '➕', callback_data: 'q+:' + k }, { text: '🗑', callback_data: 'rm:' + k }]));
+  kb.push([{ text: '✏️ Món khác (gõ tay)', callback_data: 'item' }, { text: '🎁 Giảm giá', callback_data: 'gg' }]);
+  kb.push([{ text: '👤 Khách', callback_data: 'nm' }, { text: '📞 SĐT', callback_data: 'ph' }, { text: '🏢 MST', callback_data: 'ms' }]);
+  kb.push(METHODS.map((m, i) => ({ text: (d.method === m ? '✓ ' : '') + MICON[i] + ' ' + m.replace('Chuyển khoản', 'CK').replace('Ví điện tử', 'Ví'), callback_data: 'pay:' + i })));
+  kb.push([{ text: '✅ XUẤT HÓA ĐƠN', callback_data: 'done' }, { text: '🗑 Huỷ nháp', callback_data: 'cancel' }]);
+  return { inline_keyboard: kb };
+}
+async function refresh(chat, d) {
+  const r = await edit(chat, d.msgId, draftText(d), { reply_markup: draftKb(d) });
+  if (!r.ok && !/not modified/i.test(r.description || '')) { const s = await send(chat, draftText(d), { reply_markup: draftKb(d) }); if (s.ok) d.msgId = s.result.message_id; }
+}
+async function newDraft(chat) {
+  const old = drafts.get(chat); if (old && old.msgId) edit(chat, old.msgId, '<i>(nháp cũ đã đóng)</i>', { reply_markup: { inline_keyboard: [] } });
+  const d = newDraft0(); drafts.set(chat, d);
+  const s = await send(chat, draftText(d), { reply_markup: draftKb(d) }); if (s.ok) d.msgId = s.result.message_id;
+}
+async function ask(chat, d, kind, text, ph) {
+  d.await = kind; const s = await send(chat, text, { reply_markup: { force_reply: true, input_field_placeholder: ph || '' } }); if (s.ok) d.junk.push(s.result.message_id);
+}
+async function finish(chat, d) {
+  const c = calc(d.items, d.discount, DB.settings.vat, '');
+  const o = { id: nextId(), date: fmtDate(), ts: Date.now(), name: d.name, phone: d.phone, mst: d.mst, items: d.items.map(i => ({ ...i })), sub: c.sub, discount: c.discount,
+    vatPct: +DB.settings.vat || 0, vat: c.vat, total: c.total, paid: c.total, change: 0, method: d.method, source: 'telegram' };
+  DB.orders.push(stamp(o)); bumpNext(o.id); persist(); drafts.delete(chat); log('Đơn mới', o.id, fm(o.total));
+  await edit(chat, d.msgId, `✅ Đã chốt <b>${esc(o.id)}</b> — ${fm(o.total)} ₫ (${esc(o.method)})`, { reply_markup: { inline_keyboard: [] } });
+  await sendBill(chat, o, '👆 Chạm vào hóa đơn để sao chép → dán gửi khách.');
+}
+const sendBill = (chat, o, note) => send(chat, '<pre>' + esc(receiptText(o)) + '</pre>' + (note ? '\n' + note : ''),
+  { reply_markup: { inline_keyboard: [[{ text: '🔁 Đơn mới', callback_data: 'new' }, { text: '🗑 Xoá đơn', callback_data: 'del:' + o.id }]] } });
+
+function years() { const ys = new Set([2026, 2027, new Date().getFullYear()]); DB.orders.forEach(o => ys.add(odate(o).getFullYear())); return [...ys].sort(); }
+function revView(year) {
+  const now = new Date(), tk = dayKey(now), mk = tk.slice(0, 7); let tn = 0, ts = 0, mn = 0, ms = 0, yn = 0, ys = 0; const a = Array.from({ length: 12 }, () => ({ n: 0, s: 0 }));
+  for (const o of DB.orders) { const d = odate(o), k = dayKey(d); if (k === tk) { tn++; ts += o.total; } if (k.slice(0, 7) === mk) { mn++; ms += o.total; } if (d.getFullYear() === year) { a[d.getMonth()].n++; a[d.getMonth()].s += o.total; yn++; ys += o.total; } }
+  const rows = a.map((x, i) => x.n ? `T${String(i + 1).padStart(2)}  ${String(x.n).padStart(3)} đơn  ${fm(x.s).padStart(12)}` : null).filter(Boolean);
+  const text = `📊 <b>DOANH THU</b>\n📅 Hôm nay: <b>${fm(ts)} ₫</b> (${tn} đơn)\n🗓 Tháng này: <b>${fm(ms)} ₫</b> (${mn} đơn)\n\n<b>Năm ${year}</b>: ${fm(ys)} ₫ · ${yn} đơn\n` +
+    (rows.length ? '<pre>' + esc(rows.join('\n')) + '</pre>' : '<i>Chưa có đơn nào trong năm này</i>');
+  return { text, kb: { inline_keyboard: [years().map(y => ({ text: (y === year ? '✓ ' : '') + y, callback_data: 'rv:' + y }))] } };
+}
+function recentView() {
+  const l = DB.orders.slice(-8).reverse();
+  return { text: l.length ? '🧾 <b>Đơn gần đây</b> — chạm để xem lại hóa đơn' : 'Chưa có đơn nào.',
+    kb: { inline_keyboard: l.map(o => [{ text: `${o.id} · ${o.name.slice(0, 14)} · ${shortPrice(o.total)}`, callback_data: 'bill:' + o.id }]) } };
+}
+const prodText = () => '📦 <b>Sản phẩm nhanh</b>\n' + (DB.products.length ? DB.products.map((p, i) => `${i + 1}. ${esc(p.name)} — ${fm(p.price)} ₫`).join('\n') : '<i>Chưa có.</i>') + '\n\nThêm: <code>/them sub fl tiktok 360k</code>\nXoá: <code>/xoasp 2</code>';
+
+/* ---------- XỬ LÝ TIN NHẮN ---------- */
+function parseQuickOrder(text) {
+  const items = []; let name = 'Khách lẻ', phone = '', mst = '', disc = 0, method = 'Tiền mặt'; const bad = [];
+  const MET = { tm: 'Tiền mặt', 'tiền mặt': 'Tiền mặt', ck: 'Chuyển khoản', 'chuyển khoản': 'Chuyển khoản', the: 'Thẻ', thẻ: 'Thẻ', vi: 'Ví điện tử', ví: 'Ví điện tử' };
+  text.split(/[\n;]+/).map(s => s.trim()).filter(Boolean).forEach(line => {
+    let m;
+    if ((m = line.match(/^(?:kh|khách|khach)\s*[:=]\s*(.+)$/i))) name = m[1].trim();
+    else if ((m = line.match(/^(?:sdt|sđt|đt|dt|phone)\s*[:=]\s*(.+)$/i))) phone = m[1].trim();
+    else if ((m = line.match(/^mst\s*[:=]\s*(.+)$/i))) mst = m[1].trim();
+    else if ((m = line.match(/^(?:gg|giảm|giam)\s*[:=]?\s*(.+)$/i)) && !isNaN(parseMoney(m[1]))) disc = parseMoney(m[1]);
+    else if (MET[line.toLowerCase()]) method = MET[line.toLowerCase()];
+    else { const it = parseItemLine(line); if (it) items.push(it); else bad.push(line); }
+  });
+  if (!items.length) return { error: bad.length ? 'Không hiểu dòng: "' + bad[0] + '"' : 'Chưa có món nào' };
+  if (bad.length) return { error: 'Không hiểu dòng: "' + bad[0] + '" (đơn chưa được tạo)' };
+  const c = calc(items, disc, DB.settings.vat, '');
+  return { order: { id: nextId(), date: fmtDate(), ts: Date.now(), name, phone, mst, items, sub: c.sub, discount: c.discount, vatPct: +DB.settings.vat || 0,
+    vat: c.vat, total: c.total, paid: c.total, change: 0, method, source: 'telegram' } };
+}
+const findOrder = id => DB.orders.find(o => o.id.toLowerCase() === String(id).trim().toLowerCase());
+
+async function handleAwait(chat, d, m) {
+  const text = m.text.trim(), dash = text === '-';
+  switch (d.await) {
+    case 'item': { const items = text.split(/[\n;]+/).map(parseItemLine).filter(Boolean);
+      if (!items.length) { d.junk.push(m.message_id); const s = await send(chat, '❌ Sai cú pháp. Gõ: <code>tên số-lượng giá</code>\nVD: <code>sub fl tiktok 1 360k</code>'); if (s.ok) d.junk.push(s.result.message_id); return; }
+      d.items.push(...items); break; }
+    case 'name': d.name = dash ? 'Khách lẻ' : text.slice(0, 60); break;
+    case 'phone': d.phone = dash ? '' : text.slice(0, 20); break;
+    case 'mst': d.mst = dash ? '' : text.slice(0, 20); break;
+    case 'disc': { const v = dash ? 0 : parseMoney(text); if (isNaN(v)) { const s = await send(chat, '❌ Nhập số tiền, VD <code>20k</code> hoặc <code>20000</code>'); if (s.ok) d.junk.push(s.result.message_id); d.junk.push(m.message_id); return; } d.discount = v; break; }
+  }
+  d.await = null; d.junk.push(m.message_id);
+  for (const id of d.junk) del(chat, id); d.junk = [];
+  await refresh(chat, d);
+}
+
+async function handle(u) {
+  if (u.callback_query) return onCallback(u.callback_query);
+  const m = u.message; if (!m || !m.text) return;
+  const chat = String(m.chat.id), text = m.text.trim(), c0 = text.split(/\s+/)[0];
+  const cmd = c0.toLowerCase().replace(/@.*$/, ''), arg = text.slice(c0.length).trim();
+  log('←', chat, text.slice(0, 50).replace(/\n/g, ' ⏎ '));
+  if (cmd === '/id') return void await send(chat, `Chat ID: <code>${chat}</code>`);
+  if (!allowed(chat)) {
+    if (cmd === '/start' && PAIR && arg === PAIR) { addChat(chat); PAIR = ''; W.pair = ''; log('Đã ghép nối chat', chat); await send(chat, '✅ <b>Ghép nối thành công!</b> Bạn có thể bắt đầu tạo đơn.', { reply_markup: MENU }); return void await send(chat, HELP); }
+    log('Từ chối chat', chat);
+    return void await send(chat, CFG.chatIds.length ? '⛔ Bạn chưa được cấp quyền dùng bot này.' : '🔐 Gõ <code>/start MÃ-6-SỐ</code> (mã 6 số hiện ở tab 🤖 Telegram Bot trên web) để ghép nối.');
+  }
+  const d = drafts.get(chat), isMenu = MENU_TEXTS.includes(text);
+  if (d && d.await && !text.startsWith('/') && !isMenu) return void await handleAwait(chat, d, m);
+  if (d && d.await) { d.await = null; for (const id of d.junk) del(chat, id); d.junk = []; }
+
+  if (cmd === '/start' || cmd === '/menu' || cmd === '/help') { await send(chat, HELP, { reply_markup: MENU }); return; }
+  if (cmd === '/new' || cmd === '/don' || text === '🛒 Tạo đơn mới') return void await newDraft(chat);
+  if (cmd === '/homnay' || cmd === '/thang' || cmd === '/tong' || text === '📊 Doanh thu') { const v = revView(+arg || new Date().getFullYear()); return void await send(chat, v.text, { reply_markup: v.kb }); }
+  if (cmd === '/lichsu' || text === '🧾 Đơn gần đây') { const v = recentView(); return void await send(chat, v.text, { reply_markup: v.kb }); }
+  if (cmd === '/sp' || text === '📦 Sản phẩm') return void await send(chat, prodText());
+  if (text === '📝 Ghi chú') { const l = DB.notes.slice(0, 6); return void await send(chat, l.length ? '📝 <b>Ghi chú gần đây</b>\n\n' + l.map(n => '• ' + esc(n.text)).join('\n\n') + '\n\nThêm: <code>/note nội dung</code>' : 'Chưa có ghi chú. Thêm: <code>/note nội dung</code>'); }
+  switch (cmd) {
+    case '/note': if (!arg) return void await send(chat, 'Cú pháp: <code>/note nội dung</code>'); DB.notes.unshift({ id: Date.now() + Math.random(), ts: Date.now(), text: arg }); persist(); return void await send(chat, '📝 Đã lưu ghi chú');
+    case '/them': { const mm = arg.match(new RegExp('^(.+?)\\s+' + PRICE_RE + '$', 'i')); const pr = mm && parseMoney(mm[2]);
+      if (!mm || isNaN(pr)) return void await send(chat, 'Cú pháp: <code>/them tên sản phẩm giá</code>\nVD: <code>/them sub fl tiktok 360k</code>');
+      const ex = DB.products.find(p => p.name.toLowerCase() === mm[1].trim().toLowerCase()); if (ex) { ex.price = pr; ex.ts = Date.now(); } else DB.products.push({ name: mm[1].trim(), price: pr, ts: Date.now() }); persist();
+      return void await send(chat, `✅ Đã lưu: ${esc(mm[1].trim())} — ${fm(pr)} ₫`); }
+    case '/xoasp': { const k = parseInt(arg, 10) - 1, p = DB.products[k]; if (!p) return void await send(chat, 'Số thứ tự không đúng. Xem /sp'); tombProduct(p); DB.products.splice(k, 1); persist(); return void await send(chat, '🗑 Đã xoá ' + esc(p.name)); }
+    case '/bill': { const o = findOrder(arg); return void await (o ? sendBill(chat, o) : send(chat, 'Không tìm thấy mã ' + esc(arg))); }
+    case '/huy': { const o = findOrder(arg); if (!o) return void await send(chat, 'Không tìm thấy mã ' + esc(arg));
+      return void await send(chat, `Xoá đơn <b>${esc(o.id)}</b> (${fm(o.total)} ₫)?`, { reply_markup: { inline_keyboard: [[{ text: '✅ Xoá', callback_data: 'delok:' + o.id }, { text: '↩ Giữ lại', callback_data: 'keep' }]] } }); }
+  }
+  if (text.startsWith('/') && cmd !== '/ban') return void await send(chat, 'Lệnh không có. Gõ /help');
+  const res = parseQuickOrder(cmd === '/ban' ? arg : text);
+  if (res.error) return void await send(chat, '❌ ' + esc(res.error) + '\n\nVí dụ:\n<code>sub fl tiktok 1 360k\nkh: Chị Nguyệt\nck</code>\n\nHoặc bấm <b>🛒 Tạo đơn mới</b> để chọn bằng nút.');
+  const o = res.order; DB.orders.push(stamp(o)); bumpNext(o.id); persist(); log('Đơn mới (gõ nhanh)', o.id, fm(o.total));
+  await send(chat, `✅ Đã chốt <b>${esc(o.id)}</b> — ${fm(o.total)} ₫`);
+  await sendBill(chat, o, '👆 Chạm vào hóa đơn để sao chép.');
+}
+
+async function onCallback(q) {
+  const chat = String(q.message.chat.id), mid = q.message.message_id, data = q.data || '';
+  if (!allowed(chat)) return void await answer(q.id, 'Không có quyền', true);
+  const i = data.indexOf(':'), k = i < 0 ? data : data.slice(0, i), v = i < 0 ? '' : data.slice(i + 1);
+  let d = drafts.get(chat);
+  if (['p', 'q+', 'q-', 'rm', 'pay', 'item', 'nm', 'ph', 'ms', 'gg', 'done', 'cancel'].includes(k) && (!d || d.msgId !== mid)) return void await answer(q.id, 'Nháp này đã cũ — bấm 🛒 Tạo đơn mới', true);
+  switch (k) {
+    case 'noop': return void await answer(q.id);
+    case 'new': await answer(q.id); return void await newDraft(chat);
+    case 'keep': await answer(q.id); return void await edit(chat, mid, '↩ Giữ nguyên đơn.', { reply_markup: { inline_keyboard: [] } });
+    case 'p': { const p = DB.products[+v]; if (!p) return void await answer(q.id, 'Sản phẩm không còn');
+      const ex = d.items.find(x => x.name === p.name && x.price === p.price); if (ex) ex.qty++; else d.items.push({ name: p.name, qty: 1, price: p.price }); await answer(q.id, '+ ' + p.name); return void await refresh(chat, d); }
+    case 'q+': if (d.items[+v]) d.items[+v].qty++; await answer(q.id); return void await refresh(chat, d);
+    case 'q-': if (d.items[+v]) { d.items[+v].qty--; if (d.items[+v].qty < 1) d.items.splice(+v, 1); } await answer(q.id); return void await refresh(chat, d);
+    case 'rm': d.items.splice(+v, 1); await answer(q.id); return void await refresh(chat, d);
+    case 'pay': d.method = METHODS[+v] || d.method; await answer(q.id, d.method); return void await refresh(chat, d);
+    case 'item': await answer(q.id); return void await ask(chat, d, 'item', '✏️ Gõ món: <code>tên số-lượng giá</code>\nVD: <code>sub fl tiktok 1 360k</code> (nhiều món: xuống dòng)', 'tên sl giá');
+    case 'nm': await answer(q.id); return void await ask(chat, d, 'name', '👤 Gõ tên khách (gõ <code>-</code> để về "Khách lẻ")', 'Tên khách');
+    case 'ph': await answer(q.id); return void await ask(chat, d, 'phone', '📞 Gõ số điện thoại (gõ <code>-</code> để xoá)', 'SĐT');
+    case 'ms': await answer(q.id); return void await ask(chat, d, 'mst', '🏢 Gõ mã số thuế (gõ <code>-</code> để xoá)', 'MST');
+    case 'gg': await answer(q.id); return void await ask(chat, d, 'disc', '🎁 Gõ số tiền giảm, VD <code>20k</code> (gõ <code>-</code> để bỏ giảm giá)', 'Số tiền giảm');
+    case 'cancel': drafts.delete(chat); await answer(q.id, 'Đã huỷ nháp'); return void await edit(chat, mid, '🗑 Đã huỷ đơn nháp.', { reply_markup: { inline_keyboard: [] } });
+    case 'done': if (!d.items.length) return void await answer(q.id, 'Chưa có món nào!', true); await answer(q.id, 'Đang xuất hóa đơn...'); return void await finish(chat, d);
+    case 'rv': { const v2 = revView(+v); await answer(q.id); return void await edit(chat, mid, v2.text, { reply_markup: v2.kb }); }
+    case 'bill': { const o = findOrder(v); await answer(q.id); return void await (o ? sendBill(chat, o) : send(chat, 'Đơn không còn tồn tại')); }
+    case 'del': { const o = findOrder(v); await answer(q.id); if (!o) return;
+      return void await send(chat, `Xoá đơn <b>${esc(o.id)}</b> (${fm(o.total)} ₫)? Doanh thu sẽ bị trừ.`, { reply_markup: { inline_keyboard: [[{ text: '✅ Xoá', callback_data: 'delok:' + o.id }, { text: '↩ Giữ lại', callback_data: 'keep' }]] } }); }
+    case 'delok': { const o = findOrder(v); if (o) { removeOrder(o); persist(); log('Xoá đơn', o.id); } await answer(q.id, 'Đã xoá'); return void await edit(chat, mid, `🗑 Đã xoá ${esc(v)}.`, { reply_markup: { inline_keyboard: [] } }); }
+    default: return void await answer(q.id);
+  }
+}
+
+
+  /* ---------- VÒNG LẶP NHẬN TIN ---------- */
+  async function start() {
+    if (W.running || !stopFlag) return;
+    if (!CFG.token) { W.lastError = 'Chưa nhập Bot Token.'; W.hint = ''; renderWebBot(); return; }
+    stopFlag = false; PAIR = CFG.chatIds.length ? '' : String(Math.floor(100000 + Math.random() * 900000)); W.pair = PAIR;
+    DB.settings.tgOn = true; save(); W.lastError = ''; W.hint = ''; renderWebBot();
+    while (!stopFlag) {
+      try {
+        const me = await tg('getMe', {}, 15000);
+        if (!me.ok) { const e = new Error(me.description || 'Token sai'); e.fatal = me.error_code === 401 || me.error_code === 404; throw e; }
+        W.bot = '@' + me.result.username; await tg('deleteWebhook', {}, 15000); try { await tg('setMyCommands', { commands: BOT_CMDS }, 15000); } catch (e) {} W.running = true; W.lastError = ''; W.hint = '';
+        log('✅ Bot ' + W.bot + ' đã kết nối Telegram'); break;
+      } catch (e) { W.running = false; setErr(e); log('❌ ' + W.lastError); if (e.fatal) { stopFlag = true; DB.settings.tgOn = false; save(); renderWebBot(); return; } await sleepW(6000); }
     }
-  } catch (e) { /* mất kết nối bot.js: lần sau sẽ đồng bộ lại */ }
-  pushing = false; if (again) { again = false; push(); }
+    while (!stopFlag) {
+      try {
+        const r = await tg('getUpdates', { offset: +DB.settings.tgOffset || 0, timeout: 25, allowed_updates: ['message', 'callback_query'] }, 40000);
+        if (!r.ok) { const e = new Error(r.description || 'Lỗi getUpdates'); e.fatal = r.error_code === 401; throw e; }
+        W.running = true; W.lastError = ''; W.hint = ''; renderWebBot();
+        for (const u of r.result) { DB.settings.tgOffset = u.update_id + 1; try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} try { await handle(u); } catch (e) { log('Lỗi xử lý: ' + e.message); } }
+      } catch (e) { if (stopFlag) break; W.running = false; setErr(e); log('Mất kết nối: ' + W.lastError); renderWebBot(); if (e.fatal) { stopFlag = true; DB.settings.tgOn = false; save(); break; } await sleepW(5000); }
+    }
+    W.running = false; renderWebBot();
+  }
+  function newPair() { if (!WB.isOn) return toast('Bật bot trước đã'); PAIR = String(Math.floor(100000 + Math.random() * 900000)); W.pair = PAIR; renderWebBot(); toast('🔑 Nhắn cho bot: /start ' + PAIR); }
+  function stop() { stopFlag = true; W.running = false; DB.settings.tgOn = false; save(); if (pollCtl) pollCtl.abort(); log('Đã tắt bot'); renderWebBot(); }
+  async function test() { try { const me = await tg('getMe', {}, 15000); if (me.ok) { log('Token hợp lệ: @' + me.result.username); toast('✅ Token OK: @' + me.result.username); } else { log('Token sai: ' + me.description); toast('❌ ' + me.description); } } catch (e) { setErr(e); log('❌ ' + W.lastError); toast('❌ Không gọi được Telegram'); renderWebBot(); } }
+  return { W, start, stop, test, newPair, get isOn() { return !stopFlag; } };
+})();
+function renderWebBot() {
+  const W = WB.W; let cls, label;
+  if (W.running) { cls = 'ok'; label = 'Bot ' + W.bot + ' đang chạy trong trang này'; } else if (WB.isOn) { cls = 'bad'; label = 'Đang cố kết nối Telegram...'; } else { cls = 'off'; label = 'Bot trong trang đang tắt'; }
+  const el = $('wb-status'); if (!el) return;
+  el.innerHTML = `<span class="pill ${cls}">${esc(label)}</span>` + (W.lastError ? `<pre class="code">${esc(W.lastError)}</pre>` : '') + (W.hint ? `<p class="hint">💡 ${esc(W.hint)}</p>` : '')
+    + (W.pair && WB.isOn ? `<p class="hint">🔐 Chưa ghép nối: nhắn cho bot <code>/start ${esc(W.pair)}</code></p>` : '');
+  const lg = $('wb-log'); if (lg) { lg.innerHTML = W.logs.map(l => `<div>${esc(l)}</div>`).join(''); lg.scrollTop = lg.scrollHeight; }
+  $('tgState').innerHTML = `<span class="tgdot ${W.running ? 'on' : ''}"></span>${esc(W.running ? label : (WB.isOn ? 'Bot đang kết nối...' : 'Bot tắt'))}`;
 }
-function mergeFrom(s) { // đơn mới do bot tạo trong lúc web chưa kịp đồng bộ → trộn lại, không mất đơn nào
-  const ids = new Set(DB.orders.map(o => o.id)); (s.orders || []).forEach(o => { if (!ids.has(o.id)) DB.orders.push(o); });
-  DB.orders.sort((a, b) => (a.ts || 0) - (b.ts || 0));
-  const nid = new Set(DB.notes.map(n => String(n.id))); (s.notes || []).forEach(n => { if (!nid.has(String(n.id))) DB.notes.push(n); });
-  const pn = new Set(DB.products.map(p => p.name.toLowerCase())); (s.products || []).forEach(p => { if (!pn.has(p.name.toLowerCase())) DB.products.push(p); });
-  DB.settings.next = Math.max(+DB.settings.next || 1, +((s.settings || {}).next) || 1);
-  localCache(); renderAll();
+function wbSaveFields() { DB.settings.tgToken = $('wb-token').value.trim(); DB.settings.tgChats = $('wb-chats').value.trim(); DB.settings.tgApi = $('wb-api').value.trim(); save(); }
+function wbStart() { DB.settings.tgToken = $('wb-token').value.trim(); DB.settings.tgChats = $('wb-chats').value.trim(); DB.settings.tgApi = $('wb-api').value.trim(); save(); WB.start(); }
+
+/* ============ ĐỒNG BỘ GITHUB (database dùng chung mọi thiết bị) ============ */
+const b64e = s => { const u = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(bin); };
+const b64d = b => { const bin = atob(String(b).replace(/\s/g, '')), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); };
+const GH = { sha: null, etag: null, remoteCanon: null, busy: false, rerun: false, state: 'off', err: '', last: 0, timer: null, poll: null };
+function localCache() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+function ghCfg() {
+  const s = DB.settings;
+  return { tok: (s.ghToken || '').trim(), repo: (s.ghRepo || '').trim().replace(/^https?:\/\/github\.com\//i, '').replace(/\.git$/i, '').replace(/^\/+|\/+$/g, ''),
+    path: ((s.ghPath || 'pos-data.json').trim().replace(/^\/+/, '')) || 'pos-data.json', br: (s.ghBranch || '').trim(), api: (s.ghApi || 'https://api.github.com').trim().replace(/\/+$/, '') };
 }
-async function syncPull() {
-  if (!SERVER || pushing || pushT) return;
+const ghOn = () => { const c = ghCfg(); return !!(c.tok && /^[^\/\s]+\/[^\/\s]+$/.test(c.repo)); };
+const ghHead = (c, extra) => ({ Authorization: 'Bearer ' + c.tok, Accept: 'application/vnd.github+json', ...(extra || {}) });
+const ghUrl = (c, q) => `${c.api}/repos/${c.repo}/contents/${c.path.split('/').map(encodeURIComponent).join('/')}${q && c.br ? '?ref=' + encodeURIComponent(c.br) : ''}`;
+async function ghError(r) {
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  const e = new Error(r.status === 401 ? 'Token GitHub sai hoặc đã hết hạn — tạo token mới rồi dán lại.'
+    : r.status === 403 ? (r.headers.get('x-ratelimit-remaining') === '0' ? 'GitHub tạm giới hạn số lần gọi, đợi vài phút sẽ tự chạy lại.' : 'Token không có quyền "Contents: Read and write" trên repo này.' + (j.message ? ' (' + j.message + ')' : ''))
+    : r.status === 404 ? 'Không tìm thấy repo "' + ghCfg().repo + '" — kiểm tra tên repo (dạng tên/repo) và token có chọn đúng repo này không.'
+    : 'GitHub báo lỗi ' + r.status + (j.message ? ': ' + j.message : '')); e.status = r.status; return e;
+}
+async function ghPull(c) {
+  const r = await fetch(ghUrl(c, true), { headers: ghHead(c, GH.etag ? { 'If-None-Match': GH.etag } : {}), cache: 'no-store' });
+  if (r.status === 304) return { same: true };
+  if (r.status === 404) return { missing: true };
+  if (!r.ok) throw await ghError(r);
+  const j = await r.json(); if (Array.isArray(j)) throw new Error('Đường dẫn file đang trỏ tới một thư mục, hãy đổi tên file.');
+  GH.etag = r.headers.get('ETag'); GH.sha = j.sha; let text;
+  if (j.content && j.encoding === 'base64') text = b64d(j.content);
+  else { const rr = await fetch(ghUrl(c, true), { headers: ghHead(c, { Accept: 'application/vnd.github.raw+json' }), cache: 'no-store' }); if (!rr.ok) throw await ghError(rr); text = await rr.text(); }
+  return { data: text.trim() ? JSON.parse(text) : {} };
+}
+async function ghPut(c) {
+  const view = viewOf(DB), body = { message: 'POS sync ' + new Date().toISOString(), content: b64e(JSON.stringify(view)) };
+  if (GH.sha) body.sha = GH.sha; if (c.br) body.branch = c.br;
+  const r = await fetch(ghUrl(c, false), { method: 'PUT', headers: ghHead(c, { 'Content-Type': 'application/json' }), body: JSON.stringify(body) });
+  if (r.ok) { const j = await r.json(); GH.sha = j.content && j.content.sha; GH.etag = null; GH.remoteCanon = JSON.stringify(view); return 'ok'; }
+  if (r.status === 409 || r.status === 422) { const e = await ghError(r); GH.lastConflict = e.message; return 'conflict'; }
+  throw await ghError(r);
+}
+function pushSoon() { if (!ghOn()) return; clearTimeout(GH.timer); GH.timer = setTimeout(() => ghSync('save'), 1200); }
+async function ghSync() {
+  if (!ghOn()) { GH.state = 'off'; renderGh(); return; }
+  if (GH.busy) { GH.rerun = true; return; }
+  GH.busy = true; GH.state = 'sync'; renderGh(); const c = ghCfg();
   try {
-    const r = await fetch('api/state', { cache: 'no-store' }); const j = await r.json();
-    if (j.rev === srvRev) return;
-    const before = new Set(DB.orders.map(o => o.id)), oldNext = nextId(), cur = $('f-id').value;
-    DB = normDB(j.state); srvRev = j.rev; localCache();
-    if (!document.querySelector('#tab-set.on')) loadSettingsUI();
-    if (!cur || cur === oldNext) $('f-id').value = nextId();
-    const fresh = DB.orders.filter(o => !before.has(o.id));
-    if (fresh.length) toast('🤖 Đơn mới từ Telegram: ' + fresh.map(o => o.id).join(', '));
-    renderAll();
-  } catch (e) { /* bỏ qua */ }
+    for (let t = 0; ; t++) {
+      const p = await ghPull(c);
+      if (p.data) { const rem = fixDB(p.data); GH.remoteCanon = JSON.stringify(viewOf(rem)); mergeApply(rem); }
+      else if (p.missing) { GH.sha = null; GH.etag = null; GH.remoteCanon = null; }
+      if (JSON.stringify(viewOf(DB)) === GH.remoteCanon) break;
+      if (await ghPut(c) === 'ok') break;
+      if (t >= 3) throw new Error('Hai thiết bị đang ghi cùng lúc: ' + (GH.lastConflict || 'xung đột') + ' — sẽ tự thử lại.');
+    }
+    GH.state = 'ok'; GH.err = ''; GH.last = Date.now();
+  } catch (e) { GH.err = e.message; GH.state = (e instanceof TypeError || /Failed to fetch|NetworkError|Load failed/i.test(e.message)) ? 'offline' : 'err'; if (GH.state === 'offline') GH.err = 'Không kết nối được GitHub (mất mạng / bị chặn). Dữ liệu vẫn lưu trên máy này và sẽ tự đồng bộ khi có mạng.'; }
+  GH.busy = false; renderGh();
+  if (GH.rerun) { GH.rerun = false; setTimeout(() => ghSync(), 300); }
 }
-async function pullStatus() { try { const r = await fetch('api/status', { cache: 'no-store' }); renderBotStatus(await r.json()); } catch (e) { renderBotStatus(null); } }
-function renderBotStatus(s) {
-  let cls, label;
-  if (!s) { cls = 'off'; label = SERVER ? 'Mất kết nối tới bot.js' : 'Chế độ file — chưa chạy bot.js'; }
-  else if (s.running) { cls = 'ok'; label = 'Bot ' + s.bot + ' đang chạy'; }
-  else if (!s.configured) { cls = 'off'; label = 'Chưa có token (config.json)'; }
-  else { cls = 'bad'; label = 'Bot chưa kết nối được Telegram'; }
-  $('tgState').innerHTML = `<span class="tgdot ${cls === 'ok' ? 'on' : ''}"></span>${esc(label)}`;
-  $('bot-status').innerHTML = `<span class="pill ${cls}">${esc(label)}</span> ` + (SERVER ? '<span class="pill ok">Đồng bộ dữ liệu ✓</span>' : '<span class="pill off">Dữ liệu chỉ nằm trong trình duyệt</span>')
-    + (s && s.lastError ? `<pre class="code">${esc(s.lastError)}</pre>` : '') + (s && s.hint ? `<p class="hint">💡 ${esc(s.hint)}</p>` : '')
-    + (s && s.pairing ? '<p class="hint">🔐 Chưa ghép nối: nhắn cho bot <code>/start MÃ</code> (mã 6 số hiện trong cửa sổ chạy bot.js).</p>' : '')
-    + (!SERVER ? '<p class="hint">Bạn đang mở file trực tiếp nên bot không hoạt động ở đây. Chạy <code>bot.js</code> rồi vào <code>http://localhost:3000</code>.</p>' : '');
+function mergeApply(rem) {
+  const prev = new Set(DB.orders.map(oid)), info = mergeState(rem); localCache();
+  const fresh = DB.orders.filter(o => !prev.has(oid(o)));
+  if (info.renum.length) toast('⚠️ Trùng mã HĐ giữa 2 thiết bị, đã đổi: ' + info.renum.map(x => x.join('→')).join(', '));
+  else if (fresh.length) toast('☁️ ' + fresh.length + ' đơn mới từ thiết bị khác');
+  const cur = $('f-id').value; if (!cur || DB.orders.some(o => o.id === cur)) $('f-id').value = nextId();
+  if (info.settingsChanged) loadSettingsUI();
+  renderAll();
 }
-async function initServer() {
-  try {
-    const r = await fetch('api/state', { cache: 'no-store' }); if (!r.ok) throw 0;
-    const j = await r.json(); if (!j || !j.state) throw 0;
-    SERVER = true; srvRev = j.rev; const srv = normDB(j.state);
-    const srvEmpty = !srv.orders.length && !srv.products.length && !srv.notes.length, locHas = DB.orders.length || DB.products.length || DB.notes.length;
-    if (srvEmpty && locHas) pushSoon(); else { DB = srv; localCache(); }
-    loadSettingsUI(); clearForm(false); renderAll();
-    setInterval(syncPull, 4000); setInterval(pullStatus, 6000);
-  } catch (e) { SERVER = false; }
-  pullStatus();
+function renderGh() {
+  const on = ghOn(); let cls = 'off', label;
+  if (!on) label = 'Chưa kết nối GitHub';
+  else if (GH.state === 'sync') label = 'Đang đồng bộ...';
+  else if (GH.state === 'ok') { cls = 'ok'; const d = new Date(GH.last); label = `Đã đồng bộ ${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}`; }
+  else if (GH.state === 'offline') { cls = 'bad'; label = 'Chưa đồng bộ được (mất mạng)'; }
+  else if (GH.state === 'err') { cls = 'bad'; label = 'Lỗi đồng bộ GitHub'; }
+  else label = 'Sắp đồng bộ...';
+  const h = $('ghState'); if (h) h.innerHTML = `<span class="tgdot ${cls === 'ok' ? 'on' : cls === 'bad' ? 'bad' : ''}"></span>☁️ ${esc(label)}`;
+  const el = $('gh-status'); if (el) el.innerHTML = `<span class="pill ${cls}">${esc(label)}</span>` + (on ? `<span class="pill off">${esc(ghCfg().repo)}</span>` : '') + (GH.err ? `<pre class="code">${esc(GH.err)}</pre>` : '');
 }
+function ghStart() { clearInterval(GH.poll); GH.poll = setInterval(() => { if (!document.hidden) ghSync(); }, 20000); ghSync(); }
+function ghReadFields() { const s = DB.settings; s.ghToken = $('gh-token').value.trim(); s.ghRepo = $('gh-repo').value.trim(); s.ghPath = $('gh-path').value.trim() || 'pos-data.json'; s.ghBranch = $('gh-branch').value.trim(); s.ghApi = $('gh-api').value.trim(); }
+function ghConnect() {
+  ghReadFields(); if (!ghOn()) { GH.err = 'Cần nhập đủ Token và tên repo dạng  tên-github/tên-repo'; GH.state = 'err'; return renderGh(); }
+  GH.sha = null; GH.etag = null; GH.remoteCanon = null; GH.err = ''; localCache(); ghStart(); toast('☁️ Đang kết nối GitHub...');
+}
+function ghDisconnect() { if (!confirm('Ngắt kết nối GitHub trên thiết bị này? Dữ liệu trên máy và trên GitHub vẫn giữ nguyên.')) return;
+  clearInterval(GH.poll); DB.settings.ghToken = ''; $('gh-token').value = ''; GH.state = 'off'; GH.err = ''; localCache(); renderGh(); }
+function ghCopyCode() { ghReadFields(); if (!ghOn()) return toast('Nhập token + repo trước đã'); const c = ghCfg();
+  copyText('POSGH1.' + b64e(JSON.stringify({ t: c.tok, r: c.repo, p: c.path, b: c.br }))).then(ok => toast(ok ? '📋 Đã copy mã kết nối — dán vào máy khác (giữ kín, có chứa token!)' : '❌ Không copy được')); }
+function ghUseCode() { const v = $('gh-code').value.trim(); if (!/^POSGH1\./.test(v)) return toast('Mã không đúng (phải bắt đầu bằng POSGH1.)');
+  try { const o = JSON.parse(b64d(v.slice(7))); $('gh-token').value = o.t || ''; $('gh-repo').value = o.r || ''; $('gh-path').value = o.p || 'pos-data.json'; $('gh-branch').value = o.b || ''; $('gh-code').value = ''; ghConnect(); }
+  catch (e) { toast('❌ Mã bị lỗi, copy lại cho đủ'); } }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && ghOn()) ghSync(); });
+window.addEventListener('online', () => { if (ghOn()) ghSync(); });
 
 /* ============ KHỞI TẠO ============ */
 function renderAll() { renderCart(); renderChips(); renderPreview(); renderStats(); renderHistory(); renderProducts(); renderNotes(); renderRevenue(); }
@@ -835,7 +1302,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 setInterval(() => { const d = new Date(); $('clock').textContent = `${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}`;
   $('today').textContent = d.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }); }, 1000);
 
-loadSettingsUI(); clearForm(false); renderAll(); initServer();
+loadSettingsUI(); clearForm(false); renderAll(); renderWebBot(); renderGh();
+if (ghOn()) ghStart();
+if (DB.settings.tgOn && DB.settings.tgToken) setTimeout(() => WB.start(), 600);
 </script>
 </body>
 </html>
