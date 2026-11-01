@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POS Siêu VIP · All-in-One</title>
+<style>
+:root{
+  --bg:#0b1020; --bg2:#0f172a; --panel:rgba(20,29,53,.72); --panel-solid:#131b33;
+  --line:rgba(148,163,184,.16); --text:#e2e8f0; --muted:#8b9ab5;
+  --cyan:#22d3ee; --blue:#3b82f6; --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --amber:#f59e0b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif; color:var(--text);
+  background:
+    radial-gradient(900px 500px at 8% -10%,rgba(59,130,246,.22),transparent 60%),
+    radial-gradient(800px 500px at 100% 0%,rgba(139,92,246,.18),transparent 60%),
+    linear-gradient(var(--bg),var(--bg2));
+  background-attachment:fixed; min-height:100vh;
+}
+body::before{ /* lưới công nghệ rất nhẹ */
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:linear-gradient(rgba(148,163,184,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.045) 1px,transparent 1px);
+  background-size:38px 38px; mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 80%);
+}
+.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* HEADER */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 0 22px rgba(59,130,246,.45)}
+.brand h1{font-size:1.15rem;margin:0;letter-spacing:.3px}
+.brand small{color:var(--muted)}
+.clock{font-variant-numeric:tabular-nums;color:var(--cyan);font-size:1.05rem;text-align:right}
+.clock small{display:block;color:var(--muted);font-size:.75rem}
+.tgdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#475569;margin-right:6px}
+.tgdot.on{background:var(--green);box-shadow:0 0 10px var(--green)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr) 1.4fr;gap:12px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;backdrop-filter:blur(8px)}
+.stat .k{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:1px}
+.stat .v{font-size:1.5rem;font-weight:700;margin-top:4px}
+.stat .v.g{color:var(--green)} .stat .v.c{color:var(--cyan)} .stat .v.p{color:#a78bfa}
+.chart{display:flex;align-items:flex-end;gap:8px;height:62px;margin-top:6px}
+.chart .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.chart .bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(var(--cyan),var(--blue));min-height:2px;opacity:.9}
+.chart .l{font-size:.62rem;color:var(--muted);margin-top:3px}
+
+/* TABS */
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;background:var(--panel);border:1px solid var(--line);padding:6px;border-radius:var(--radius);backdrop-filter:blur(8px)}
+nav.tabs button{flex:1;min-width:110px;background:transparent;border:0;color:var(--muted);padding:10px 12px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;transition:.18s}
+nav.tabs button:hover{color:var(--text);background:rgba(148,163,184,.08)}
+nav.tabs button.on{color:#fff;background:linear-gradient(135deg,rgba(59,130,246,.9),rgba(139,92,246,.9));box-shadow:0 4px 18px rgba(59,130,246,.35)}
+.tab{display:none} .tab.on{display:block}
+
+/* PANELS */
+.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;backdrop-filter:blur(8px)}
+.panel h2{margin:0 0 14px;font-size:1.02rem;display:flex;align-items:center;gap:8px}
+.panel h2 .sp{flex:1}
+.hint{color:var(--muted);font-size:.8rem}
+label{display:block;font-size:.78rem;color:var(--muted);margin:0 0 5px;font-weight:600;letter-spacing:.3px}
+input,select,textarea{width:100%;background:rgba(8,13,28,.7);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;transition:.15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.14)}
+textarea{resize:vertical;min-height:90px}
+select option{background:#0f172a}
+.row{display:flex;gap:12px} .row>*{flex:1} .fg{margin-bottom:12px}
+.r3{display:grid;grid-template-columns:2fr 1fr 1.3fr auto;gap:10px;align-items:end}
+
+.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;color:#fff;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)} .btn:active{transform:none}
+.btn.pri{background:linear-gradient(135deg,var(--blue),#6366f1)} .btn.vio{background:linear-gradient(135deg,#8b5cf6,#a855f7)}
+.btn.grn{background:linear-gradient(135deg,#059669,var(--green))} .btn.red{background:linear-gradient(135deg,#dc2626,var(--red))}
+.btn.gho{background:rgba(148,163,184,.12);color:var(--text);border:1px solid var(--line)}
+.btn.sm{padding:6px 10px;font-size:.8rem;border-radius:8px}
+.btn.block{width:100%}
+
+/* quick add + chips */
+.quick{display:flex;gap:8px;margin:2px 0 12px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.chip{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35);color:#bfdbfe;border-radius:999px;padding:5px 12px;font-size:.8rem;cursor:pointer;transition:.15s}
+.chip:hover{background:rgba(59,130,246,.3)} .chip b{color:var(--cyan);margin-left:4px;font-weight:600}
+
+/* cart */
+.cart{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.cart .it{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.cart .it:last-child{border-bottom:0}
+.cart .empty{padding:18px;text-align:center;color:var(--muted);font-size:.9rem}
+.cart .nm{font-weight:600} .cart .pr{color:var(--muted);font-size:.8rem}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:rgba(148,163,184,.1);color:var(--text);cursor:pointer;font-size:1rem;line-height:1}
+.qty span{min-width:26px;text-align:center;font-weight:700}
+.x{background:none;border:0;color:var(--red);cursor:pointer;font-size:1.1rem}
+.cash{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.sumbox{background:rgba(8,13,28,.55);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0}
+.sumbox .l{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted)}
+.sumbox .l.t{color:var(--text);font-size:1.35rem;font-weight:800;border-top:1px dashed var(--line);margin-top:6px;padding-top:9px}
+.sumbox .l.t span:last-child{color:var(--cyan)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.acts .full{grid-column:1/-1}
+
+/* RECEIPT */
+.receipt{
+  background:linear-gradient(160deg,#2563eb,#3b82f6 60%,#4f8ef7);color:#fff;font-family:Arial,Helvetica,sans-serif;
+  width:100%;max-width:330px;margin:0 auto;padding:18px 20px;border-radius:10px;box-shadow:0 18px 40px -12px rgba(37,99,235,.65),0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.receipt p{margin:4px 0;font-size:14px;line-height:1.4}
+.receipt .c{text-align:center}.receipt .b{font-weight:700}
+.receipt .f{display:flex;justify-content:space-between;gap:10px}
+.receipt .d{border-bottom:1px dashed rgba(255,255,255,.75);margin:9px 0}
+.receipt .ti{margin:6px 0;font-size:14px}.receipt .ti .s{padding-left:10px}
+.receipt .big{font-size:16px;font-weight:700}
+#printSheet{display:none}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--line);font-size:.88rem;vertical-align:top}
+th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+tbody tr:hover{background:rgba(148,163,184,.06)}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.7rem;font-weight:700}
+.tag.web{background:rgba(59,130,246,.2);color:#93c5fd}.tag.tg{background:rgba(34,211,238,.18);color:var(--cyan)}
+.money{color:var(--green);font-weight:700;white-space:nowrap}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.toolbar input{max-width:340px}
+
+/* notes */
+.note{border:1px solid var(--line);background:rgba(8,13,28,.5);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;gap:12px;justify-content:space-between}
+.note .t{white-space:pre-wrap;word-break:break-word}.note small{color:var(--muted)}
+
+/* telegram */
+.log{background:#060a16;border:1px solid var(--line);border-radius:12px;padding:12px;height:230px;overflow:auto;font-family:Consolas,monospace;font-size:.8rem;color:#9fb0cc}
+.log div{padding:2px 0;border-bottom:1px dotted rgba(148,163,184,.1)} .log .e{color:#fca5a5}.log .o{color:#86efac}
+pre.code{background:#060a16;border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;font-size:.82rem;color:#c7d2fe;margin:8px 0;white-space:pre-wrap}
+code{background:rgba(148,163,184,.14);padding:1px 6px;border-radius:5px;color:#a5f3fc}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;background:rgba(2,6,16,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel-solid);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:380px;width:100%;max-height:92vh;overflow:auto}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(30px);background:#0f172a;border:1px solid var(--cyan);color:var(--text);padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:99;box-shadow:0 0 24px rgba(34,211,238,.25)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.mrow{cursor:pointer}.mrow.sel{background:rgba(59,130,246,.14)}
+.mbar{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--blue));min-width:2px}
+.up{color:var(--green);font-weight:700}.dn{color:var(--red);font-weight:700}
+.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.8rem;font-weight:700;margin:0 4px 6px 0}
+.pill.ok{background:rgba(16,185,129,.18);color:#6ee7b7}.pill.bad{background:rgba(239,68,68,.18);color:#fca5a5}.pill.off{background:rgba(148,163,184,.18);color:var(--muted)}
+ol.steps{padding-left:20px;margin:6px 0}ol.steps li{margin:7px 0;color:var(--muted)}ol.steps b{color:var(--text)}
+tfoot td{border-top:2px solid var(--line);border-bottom:0}
+@media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:980px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}}
+@media(max-width:560px){.r3{grid-template-columns:1fr 1fr}.r3 .btn{grid-column:1/-1}.row{flex-direction:column;gap:0}}
+
+@media print{
+  body{background:#fff!important}body::before{display:none}
+  .wrap,.modal,#toast{display:none!important}
+  #printSheet{display:block!important;width:80mm;margin:0;color:#000}
+  #printSheet .receipt{background:#fff!important;color:#000!important;box-shadow:none!important;border-radius:0;max-width:80mm;padding:6px}
+  #printSheet .receipt .d{border-bottom:1px dashed #000}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">⚡</div>
+    <div><h1>POS SIÊU VIP <span style="color:var(--cyan)">· ALL-IN-ONE</span></h1><small id="shopLine">Bán hàng · Hóa đơn · Telegram Bot</small></div>
+  </div>
+  <div class="clock"><span id="tgState"><span class="tgdot"></span>Đang kiểm tra bot...</span><div id="clock">--:--:--</div><small id="today"></small></div>
+</header>
+
+<section class="stats">
+  <div class="stat"><div class="k">Doanh thu hôm nay</div><div class="v g num" id="st-today">0 ₫</div></div>
+  <div class="stat"><div class="k">Tổng doanh thu</div><div class="v c num" id="st-total">0 ₫</div></div>
+  <div class="stat"><div class="k">Số đơn đã chốt</div><div class="v p num" id="st-count">0</div></div>
+  <div class="stat"><div class="k">Trung bình / đơn</div><div class="v num" id="st-avg">0 ₫</div></div>
+  <div class="stat"><div class="k">7 ngày gần nhất</div><div class="chart" id="chart"></div></div>
+</section>
+
+<nav class="tabs" id="tabs">
+  <button data-t="sale" class="on">🛒 Bán hàng</button>
+  <button data-t="hist">🗃️ Lịch sử</button>
+  <button data-t="rev">📈 Doanh thu</button>
+  <button data-t="prod">📦 Sản phẩm</button>
+  <button data-t="note">📝 Ghi chú</button>
+  <button data-t="tele">🤖 Telegram Bot</button>
+  <button data-t="set">⚙️ Cài đặt</button>
+</nav>
+
+<!-- ===== BÁN HÀNG ===== -->
+<section class="tab on" id="tab-sale">
+<div class="grid">
+  <div class="panel">
+    <h2>🛠️ Lập hóa đơn mới <span class="sp"></span><span class="hint">Enter để thêm món</span></h2>
+
+    <div class="row">
+      <div class="fg"><label>Mã hóa đơn</label><input id="f-id"></div>
+      <div class="fg"><label>Ngày giờ</label>
+        <div style="display:flex;gap:6px"><input id="f-date"><button class="btn gho sm" onclick="setNow()" title="Lấy giờ hiện tại">↻</button></div></div>
+    </div>
+    <div class="fg"><label>Tên khách hàng</label><input id="f-name" value="Khách lẻ" list="dl-cust"></div>
+    <div class="row">
+      <div class="fg"><label>Số điện thoại</label><input id="f-phone" placeholder="Nhập SĐT..."></div>
+      <div class="fg"><label>Mã số thuế</label><input id="f-mst" placeholder="Nhập MST..."></div>
+    </div>
+
+    <h2 style="margin-top:6px">🧾 Giỏ hàng</h2>
+    <div class="quick">
+      <input id="f-quick" placeholder="⚡ Nhập nhanh: sub fl tiktok 1 360k   (tên  sl  giá) rồi Enter">
+      <button class="btn pri" onclick="quickAdd()">Thêm</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="cart" id="cart"></div>
+
+    <div class="r3">
+      <div><label>Tên sản phẩm / dịch vụ</label><input id="f-prod" list="dl-prod" placeholder="Tên món..."></div>
+      <div><label>SL</label><input id="f-qty" type="number" min="1" value="1"></div>
+      <div><label>Đơn giá (VNĐ)</label><input id="f-price" type="number" min="0" step="1000" placeholder="0"></div>
+      <button class="btn gho" onclick="addItemFromForm()">＋ Thêm món</button>
+    </div>
+    <datalist id="dl-prod"></datalist><datalist id="dl-cust"></datalist>
+
+    <div class="row" style="margin-top:14px">
+      <div class="fg"><label>Giảm giá (₫)</label><input id="f-disc" type="number" min="0" value="0"></div>
+      <div class="fg"><label>VAT (%)</label><input id="f-vat" type="number" min="0" max="100" value="0"></div>
+      <div class="fg"><label>Thanh toán</label>
+        <select id="f-method"><option>Tiền mặt</option><option>Chuyển khoản</option><option>Thẻ</option><option>Ví điện tử</option></select></div>
+    </div>
+    <div class="fg"><label>Khách đưa (để trống = đủ tiền)</label><input id="f-paid" type="number" min="0" placeholder="Chưa nhập tiền khách đưa">
+      <div class="cash">
+        <button class="btn gho sm" onclick="cash(0)">ĐỦ</button>
+        <button class="btn gho sm" onclick="cash(50000)">+50K</button>
+        <button class="btn gho sm" onclick="cash(100000)">+100K</button>
+        <button class="btn gho sm" onclick="cash(200000)">+200K</button>
+        <button class="btn gho sm" onclick="cash(500000)">+500K</button>
+        <button class="btn gho sm" onclick="cash(-1)">✕</button>
+      </div></div>
+  </div>
+
+  <div class="panel">
+    <h2 style="justify-content:center">👀 Hóa đơn trực tiếp</h2>
+    <div id="preview"></div>
+    <div class="sumbox" id="sumbox"></div>
+    <div class="acts">
+      <button class="btn vio full" onclick="doCopy(false)">📋 SAO CHÉP HÓA ĐƠN (gửi Zalo)</button>
+      <button class="btn grn" onclick="checkout('copy')">✅ Chốt đơn + Copy</button>
+      <button class="btn pri" onclick="checkout('print')">🖨️ Chốt đơn + In</button>
+      <button class="btn gho full" onclick="clearForm(true)">🧹 Làm mới form</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== LỊCH SỬ ===== -->
+<section class="tab" id="tab-hist">
+  <div class="panel">
+    <h2>🗃️ Lịch sử đơn hàng đã chốt</h2>
+    <div class="toolbar">
+      <input id="h-search" placeholder="🔎 Tìm mã HĐ, khách, SĐT, sản phẩm..." oninput="renderHistory()">
+      <input id="h-day" type="date" style="max-width:170px" oninput="renderHistory()">
+      <button class="btn gho sm" onclick="document.getElementById('h-day').value='';document.getElementById('h-search').value='';renderHistory()">Bỏ lọc</button>
+      <span style="flex:1"></span>
+      <button class="btn grn" onclick="exportCSV()">📥 Xuất Excel (CSV)</button>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Mã HĐ</th><th>Ngày giờ</th><th>Khách hàng</th><th>SĐT / MST</th><th>Sản phẩm</th><th>TT</th><th>Nguồn</th><th>Thành tiền</th><th></th></tr></thead>
+      <tbody id="h-body"></tbody>
+    </table></div>
+    <p class="hint" id="h-sum" style="margin-top:12px"></p>
+  </div>
+</section>
+
+<!-- ===== DOANH THU THÁNG ===== -->
+<section class="tab" id="tab-rev">
+  <div class="panel">
+    <h2>📈 Doanh thu theo tháng <span class="sp"></span>
+      <select id="r-year" style="width:auto" onchange="revYear=+this.value;revMonth=null;renderRevenue()"></select>
+      <button class="btn grn sm" onclick="exportRevCSV()">📥 CSV</button></h2>
+    <div class="kpis" id="r-kpi"></div>
+    <div class="tw"><table style="min-width:680px">
+      <thead><tr><th>Tháng</th><th>Số đơn</th><th>Doanh thu</th><th>TB / đơn</th><th>So tháng trước</th><th></th></tr></thead>
+      <tbody id="r-body"></tbody><tfoot id="r-foot"></tfoot></table></div>
+    <div id="r-detail" style="margin-top:18px"></div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <h2>⚖️ So sánh các năm (2026 · 2027 · ...)</h2>
+    <div class="tw"><table id="r-cmp" style="min-width:420px"></table></div>
+  </div>
+</section>
+
+<!-- ===== SẢN PHẨM ===== -->
+<section class="tab" id="tab-prod">
+  <div class="panel">
+    <h2>📦 Danh mục sản phẩm nhanh <span class="sp"></span><span class="hint">Bấm vào chip ở tab Bán hàng để thêm vào giỏ</span></h2>
+    <div class="r3" style="grid-template-columns:2fr 1.2fr auto">
+      <div><label>Tên sản phẩm</label><input id="p-name" placeholder="VD: sub fl tiktok"></div>
+      <div><label>Đơn giá</label><input id="p-price" type="number" placeholder="360000"></div>
+      <button class="btn pri" onclick="addProduct()">＋ Lưu SP</button>
+    </div>
+    <div class="tw" style="margin-top:14px"><table style="min-width:420px">
+      <thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th></th></tr></thead><tbody id="p-body"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ===== GHI CHÚ ===== -->
+<section class="tab" id="tab-note">
+  <div class="panel">
+    <h2>📝 Sổ ghi chú</h2>
+    <textarea id="n-text" placeholder="Ghi chú công việc, nợ khách, việc cần làm..."></textarea>
+    <div style="margin:10px 0 16px;display:flex;gap:10px"><button class="btn pri" onclick="addNote()">＋ Lưu ghi chú</button>
+      <input id="n-search" placeholder="🔎 Tìm ghi chú..." oninput="renderNotes()" style="max-width:300px"></div>
+    <div id="n-list"></div>
+  </div>
+</section>
+
+<!-- ===== TELEGRAM ===== -->
+<section class="tab" id="tab-tele">
+<div class="grid" style="grid-template-columns:1fr 1fr">
+  <div class="panel">
+    <h2>🤖 Trạng thái bot Telegram</h2>
+    <div id="bot-status"></div>
+    <h2 style="margin-top:22px">🚀 Cài đặt (làm 1 lần)</h2>
+    <ol class="steps">
+      <li>Cài <b>Node.js</b> bản LTS (nodejs.org).</li>
+      <li>Để <code>index.html</code>, <code>bot.js</code>, <code>start.bat</code> chung <b>một thư mục</b>.</li>
+      <li>Trên Telegram mở <b>@BotFather</b> → <code>/newbot</code> → copy <b>token</b>.</li>
+      <li>Bấm đúp <code>start.bat</code> (hoặc chạy <code>node bot.js</code>). Lần đầu nó tạo file <code>config.json</code> → dán token vào ô <code>"token"</code> → chạy lại.</li>
+      <li>Cửa sổ đen hiện <b>mã 6 số</b>. Nhắn cho bot: <code>/start 123456</code> để ghép nối tài khoản của bạn.</li>
+      <li>Luôn mở web bằng <b><code>http://localhost:3000</code></b> (đừng mở file trực tiếp) để đơn từ bot tự hiện ở đây.</li>
+    </ol>
+    <p class="hint">Bot chạy ở cửa sổ đen nên <b>không cần mở web</b> vẫn nhận và tạo đơn; chỉ cần máy đang bật và cửa sổ đó không đóng. Muốn chạy 24/7 thì đem <code>bot.js</code> lên VPS/máy chủ riêng.</p>
+    <p class="hint">⚠️ Nếu trạng thái báo <i>không kết nối được Telegram</i>: nhiều nhà mạng ở Việt Nam chặn Telegram → bật VPN, hoặc điền <code>"proxy"</code> trong <code>config.json</code> (VD <code>http://127.0.0.1:10809</code>).</p>
+  </div>
+  <div class="panel">
+    <h2>⚡ Dùng trong Telegram</h2>
+    <ol class="steps">
+      <li>Bấm <b>🛒 Tạo đơn mới</b> → chạm sản phẩm (chạm lại để tăng số lượng) → nút <b>➖ ➕</b> chỉnh số lượng.</li>
+      <li>Chọn <b>👤 Khách</b>, 📞 SĐT, 🏢 MST, 🎁 Giảm giá nếu cần; chọn thanh toán 💵 🏦 💳 📱.</li>
+      <li>Bấm <b>✅ XUẤT HÓA ĐƠN</b> → bot gửi hóa đơn chữ → <b>chạm vào hóa đơn để sao chép</b> → dán gửi khách.</li>
+      <li>Đơn tự vào <b>Lịch sử</b> và <b>Doanh thu</b> trên web.</li>
+    </ol>
+    <p class="hint">Món không có trong danh mục: bấm <b>✏️ Món khác</b> rồi gõ <code>tên sl giá</code>. Hoặc gõ thẳng một lần:</p>
+<pre class="code">sub fl tiktok 1 360k
+kh: Chị Nguyệt
+ck</pre>
+    <p class="hint"><b>Lệnh nhanh:</b></p>
+<pre class="code">/new           tạo đơn bằng nút
+/thang 2027    doanh thu các tháng của năm
+/lichsu        đơn gần đây
+/bill HD0003   xem lại hóa đơn
+/huy HD0003    xoá đơn
+/them sub fl tiktok 360k   thêm sản phẩm nhanh
+/sp  /xoasp 2  xem / xoá sản phẩm
+/note nội dung ghi chú</pre>
+  </div>
+</div>
+</section>
+
+<!-- ===== CÀI ĐẶT ===== -->
+<section class="tab" id="tab-set">
+<div class="grid" style="grid-template-columns:1fr 1fr">
+  <div class="panel">
+    <h2>⚙️ Thông tin hiển thị trên hóa đơn</h2>
+    <div class="fg"><label>Tên cửa hàng (dòng đầu hóa đơn, có thể để trống)</label><input id="s-shop"></div>
+    <div class="fg"><label>Lời cuối hóa đơn</label><input id="s-footer"></div>
+    <div class="row">
+      <div class="fg"><label>Tiền tố mã HĐ</label><input id="s-prefix"></div>
+      <div class="fg"><label>Số HĐ kế tiếp</label><input id="s-next" type="number" min="1"></div>
+      <div class="fg"><label>VAT mặc định %</label><input id="s-vat" type="number" min="0"></div>
+    </div>
+    <button class="btn pri" onclick="saveSettings()">💾 Lưu cài đặt</button>
+  </div>
+  <div class="panel">
+    <h2>💽 Sao lưu & dữ liệu</h2>
+    <p class="hint">Dữ liệu nằm trong trình duyệt này. Hãy sao lưu thường xuyên, nhất là trước khi xoá lịch sử trình duyệt.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn grn" onclick="backup()">⬇ Sao lưu JSON</button>
+      <button class="btn gho" onclick="document.getElementById('restore').click()">⬆ Khôi phục JSON</button>
+      <button class="btn red" onclick="resetAll()">⚠️ Xoá toàn bộ</button>
+    </div>
+    <input type="file" id="restore" accept=".json" style="display:none" onchange="restore(event)">
+  </div>
+</div>
+</section>
+
+</div>
+
+<div id="printSheet"></div>
+<div class="modal" id="modal"><div class="box"><div id="m-body"></div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn vio" style="flex:1" id="m-copy">📋 Copy</button><button class="btn pri" style="flex:1" id="m-print">🖨️ In</button><button class="btn gho" onclick="closeModal()">Đóng</button></div></div></div>
+<div id="toast"></div>
+
+<script>
+/* ============ DỮ LIỆU ============ */
+const KEY = 'pos_vip_v2';
+const DEF = () => ({ orders: [], products: [], notes: [],
+  settings: { shop:'VPOPI Media', footer:'Cảm ơn quý khách!', vat:0, prefix:'HD', next:1 } });
+let DB = loadDB();
+let cart = [];
+
+function loadDB() {
+  let d = DEF();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const r = JSON.parse(raw); d = { ...d, ...r, settings: { ...d.settings, ...(r.settings || {}) } }; }
+    else { // chuyển dữ liệu từ bản cũ
+      const old = JSON.parse(localStorage.getItem('pos_history') || '[]');
+      if (old.length) {
+        d.orders = old.map(o => ({ id:o.id, date:o.date, ts:Date.now(), name:o.name, phone:o.phone||'', mst:o.mst||'',
+          items:[{ name:o.prod, qty:o.qty, price:o.price }], sub:o.total, discount:0, vatPct:0, vat:0, total:o.total,
+          paid:o.total, change:0, method:'Tiền mặt', source:'web' }));
+        const n = Math.max(...d.orders.map(o => parseInt(String(o.id).replace(/\D/g,'')) || 0));
+        d.settings.next = n + 1;
+      }
+    }
+  } catch (e) { console.warn(e); }
+  return d;
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { toast('⚠️ Không lưu được dữ liệu: ' + e.message); } pushSoon(); }
+
+/* ============ TIỆN ÍCH ============ */
+const $ = id => document.getElementById(id);
+const p2 = n => String(n).padStart(2, '0');
+const fm = n => Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const fmtDate = (d = new Date()) => `${p2(d.getDate())}/${p2(d.getMonth()+1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+const dayKey = ts => { const d = new Date(ts); return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`; };
+function odate(o) { // ngày của đơn: ưu tiên chuỗi dd/mm/yyyy trên hóa đơn (khách có thể sửa tay)
+  const m = String(o.date || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  if (m) { const d = new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)); if (!isNaN(d)) return d; }
+  return new Date(o.ts || Date.now());
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let toastT;
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+async function copyText(txt) {
+  try { await navigator.clipboard.writeText(txt); return true; }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {} ta.remove(); return ok; }
+}
+function parseMoney(s) {
+  s = String(s || '').toLowerCase().trim();
+  const m = s.match(/^([\d.,]+)\s*(k|tr|triệu|nghìn|ngàn|đ|d|vnđ|vnd)?$/);
+  if (!m) return NaN;
+  const unit = m[2] || '';
+  if (['k','nghìn','ngàn'].includes(unit)) return Math.round(parseFloat(m[1].replace(',', '.')) * 1e3);
+  if (['tr','triệu'].includes(unit)) return Math.round(parseFloat(m[1].replace(',', '.')) * 1e6);
+  return parseInt(m[1].replace(/[.,]/g, ''), 10);
+}
+const PRICE_RE = '([\\d.,]+\\s*(?:k|tr|triệu|nghìn|ngàn|đ|d|vnđ|vnd)?)';
+function parseItemLine(str) {
+  str = String(str || '').trim(); if (!str) return null;
+  let m, name, qty, price;
+  if ((m = str.match(new RegExp('^(.+?)\\s+(\\d{1,4})\\s*[x*×]\\s*' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = +m[2]; price = parseMoney(m[3]); }
+  else if ((m = str.match(new RegExp('^(.+?)\\s+(\\d{1,4})\\s+' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = +m[2]; price = parseMoney(m[3]); }
+  else if ((m = str.match(new RegExp('^(.+?)\\s+' + PRICE_RE + '$', 'i')))) { name = m[1]; qty = 1; price = parseMoney(m[2]); }
+  else return null;
+  if (!name.trim() || isNaN(price) || qty < 1) return null;
+  return { name: name.trim(), qty, price };
+}
+
+/* ============ TÍNH TIỀN & HÓA ĐƠN ============ */
+function calc(items, discount, vatPct, paidRaw) {
+  const sub = items.reduce((s, i) => s + i.qty * i.price, 0);
+  discount = Math.min(Math.max(+discount || 0, 0), sub);
+  const base = sub - discount;
+  const vat = Math.round(base * (+vatPct || 0) / 100);
+  const total = base + vat;
+  const paid = (paidRaw === '' || paidRaw == null || isNaN(+paidRaw)) ? total : +paidRaw;
+  return { sub, discount, vat, total, paid, change: Math.max(0, paid - total) };
+}
+function nextId() {
+  const s = DB.settings; let n = Math.max(1, +s.next || 1), id;
+  const used = new Set(DB.orders.map(o => o.id));
+  do { id = s.prefix + String(n).padStart(4, '0'); n++; } while (used.has(id));
+  return id;
+}
+function bumpNext(id) {
+  const n = parseInt(String(id).replace(/\D/g, ''), 10);
+  DB.settings.next = isNaN(n) ? (+DB.settings.next || 1) + 1 : Math.max(n + 1, 1);
+}
+function draftOrder() {
+  flushPending();
+  const items = cart.map(i => ({ ...i }));
+  const c = calc(items, $('f-disc').value, $('f-vat').value, $('f-paid').value);
+  return { id: $('f-id').value.trim() || nextId(), date: $('f-date').value.trim() || fmtDate(), ts: Date.now(),
+    name: $('f-name').value.trim() || 'Khách lẻ', phone: $('f-phone').value.trim(), mst: $('f-mst').value.trim(),
+    items, sub:c.sub, discount:c.discount, vatPct:+$('f-vat').value || 0, vat:c.vat, total:c.total, paid:c.paid, change:c.change,
+    method: $('f-method').value, source: 'web' };
+}
+function receiptHTML(o) {
+  const S = DB.settings;
+  const line = (k, v, cls = '') => `<div class="f ${cls}"><span>${k}</span><span>${v}</span></div>`;
+  let h = '<div class="receipt">';
+  if (S.shop) h += `<p class="b" style="font-size:16px">${esc(S.shop)}</p>`;
+  if (o.phone) h += `<p>SĐT: ${esc(o.phone)}</p>`;
+  if (o.mst) h += `<p>MST: ${esc(o.mst)}</p>`;
+  h += `<p class="b" style="font-size:16px;margin:8px 0 4px">HOÁ ĐƠN BÁN LẺ</p>
+        <p>Số: ${esc(o.id)}</p><p>${esc(o.date)}</p><p>Khách: ${esc(o.name)}</p><div class="d"></div>
+        <div class="f"><span>Sản phẩm</span><span>T.Tiền</span></div><div class="d"></div>`;
+  if (!o.items.length) h += '<p class="c" style="opacity:.8">(chưa có sản phẩm)</p>';
+  o.items.forEach(i => { h += `<div class="ti"><div>${esc(i.name)}</div><div class="f"><span>${fm(i.qty)} x ${fm(i.price)}</span><span>${fm(i.qty * i.price)}</span></div></div>`; });
+  h += '<div class="d"></div>';
+  if (o.discount || o.vat) {
+    h += line('Tạm tính', fm(o.sub));
+    if (o.discount) h += line('Giảm giá', '-' + fm(o.discount));
+    if (o.vat) h += line(`VAT ${o.vatPct}%`, fm(o.vat));
+  }
+  h += `<div style="margin:5px 0">${line('TỔNG CỘNG', fm(o.total), 'big')}</div>`;
+  if (o.paid !== o.total) { h += line('Khách trả', fm(o.paid)); if (o.change) h += line('Tiền thừa', fm(o.change)); }
+  h += `<p>Thanh toán: ${esc(o.method)}</p><div class="d"></div>`;
+  if (S.footer) h += `<p>${esc(S.footer)}</p>`;
+  return h + '</div>';
+}
+function receiptText(o) {
+  const S = DB.settings, L = '-'.repeat(36), t = [];
+  if (S.shop) t.push(S.shop);
+  if (o.phone) t.push('SĐT: ' + o.phone);
+  if (o.mst) t.push('MST: ' + o.mst);
+  t.push('HOÁ ĐƠN BÁN LẺ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
+  o.items.forEach(i => t.push(i.name, `${fm(i.qty)} x ${fm(i.price)}`, fm(i.qty * i.price)));
+  t.push(L);
+  if (o.discount || o.vat) { t.push('Tạm tính', fm(o.sub)); if (o.discount) t.push('Giảm giá', '-' + fm(o.discount)); if (o.vat) t.push(`VAT ${o.vatPct}%`, fm(o.vat)); }
+  t.push('TỔNG CỘNG', fm(o.total));
+  if (o.paid !== o.total) { t.push('Khách trả', fm(o.paid)); if (o.change) t.push('Tiền thừa', fm(o.change)); }
+  t.push('Thanh toán: ' + o.method, L);
+  if (S.footer) t.push(S.footer);
+  return t.join('\n');
+}
+
+/* ============ GIAO DIỆN BÁN HÀNG ============ */
+function flushPending() {
+  const name = $('f-prod').value.trim(), price = parseInt($('f-price').value, 10);
+  if (name && !isNaN(price) && price >= 0) {
+    cart.push({ name, qty: Math.max(1, parseInt($('f-qty').value, 10) || 1), price });
+    $('f-prod').value = ''; $('f-qty').value = 1; $('f-price').value = '';
+  }
+}
+function addItemFromForm() {
+  const name = $('f-prod').value.trim(), price = parseInt($('f-price').value, 10);
+  if (!name) return toast('Nhập tên sản phẩm đã');
+  if (isNaN(price)) return toast('Nhập đơn giá đã');
+  flushPending(); renderAll(); $('f-prod').focus();
+}
+function quickAdd() {
+  const it = parseItemLine($('f-quick').value);
+  if (!it) return toast('Sai cú pháp. VD: sub fl tiktok 1 360k');
+  cart.push(it); $('f-quick').value = ''; renderAll(); $('f-quick').focus();
+}
+function addFromProduct(i) { const p = DB.products[i]; if (!p) return;
+  const ex = cart.find(c => c.name === p.name && c.price === p.price);
+  if (ex) ex.qty++; else cart.push({ name: p.name, qty: 1, price: p.price }); renderAll(); }
+function chQty(i, d) { cart[i].qty = Math.max(1, cart[i].qty + d); renderAll(); }
+function rmItem(i) { cart.splice(i, 1); renderAll(); }
+function cash(v) {
+  const o = calc(cart, $('f-disc').value, $('f-vat').value, '');
+  if (v === 0) $('f-paid').value = o.total; else if (v < 0) $('f-paid').value = '';
+  else $('f-paid').value = (parseInt($('f-paid').value, 10) || 0) + v; renderPreview();
+}
+function setNow() { $('f-date').value = fmtDate(); renderPreview(); }
+function clearForm(ask) {
+  if (ask && (cart.length || $('f-phone').value) && !confirm('Làm mới form và xoá giỏ hàng hiện tại?')) return;
+  cart = []; ['f-phone','f-mst','f-paid','f-prod','f-price','f-quick'].forEach(i => $(i).value = '');
+  $('f-name').value = 'Khách lẻ'; $('f-qty').value = 1; $('f-disc').value = 0; $('f-vat').value = DB.settings.vat || 0;
+  $('f-id').value = nextId(); setNow(); renderAll();
+}
+function renderCart() {
+  const el = $('cart');
+  if (!cart.length) { el.innerHTML = '<div class="empty">Giỏ hàng trống — gõ nhập nhanh hoặc bấm chip sản phẩm</div>'; return; }
+  el.innerHTML = cart.map((i, k) => `<div class="it">
+    <div><div class="nm">${esc(i.name)}</div><div class="pr num">${fm(i.price)} ₫ / cái</div></div>
+    <div class="qty"><button onclick="chQty(${k},-1)">−</button><span class="num">${i.qty}</span><button onclick="chQty(${k},1)">+</button></div>
+    <div class="money num">${fm(i.qty * i.price)} ₫</div><button class="x" onclick="rmItem(${k})">✕</button></div>`).join('');
+}
+function renderChips() {
+  $('chips').innerHTML = DB.products.length ? DB.products.map((p, i) => `<span class="chip" onclick="addFromProduct(${i})">${esc(p.name)}<b class="num">${fm(p.price)}</b></span>`).join('')
+    : '<span class="hint">Chưa có sản phẩm nhanh — thêm ở tab 📦 Sản phẩm</span>';
+  $('dl-prod').innerHTML = DB.products.map(p => `<option value="${esc(p.name)}">`).join('');
+  const names = [...new Set(DB.orders.map(o => o.name))].slice(-40);
+  $('dl-cust').innerHTML = names.map(n => `<option value="${esc(n)}">`).join('');
+}
+function renderPreview() {
+  const o = draftOrder0();
+  $('preview').innerHTML = receiptHTML(o);
+  $('sumbox').innerHTML = `<div class="l"><span>Tạm tính · ${cart.reduce((s, i) => s + i.qty, 0)} sp</span><span class="num">${fm(o.sub)} ₫</span></div>
+    ${o.discount ? `<div class="l"><span>Giảm giá</span><span class="num">-${fm(o.discount)} ₫</span></div>` : ''}
+    ${o.vat ? `<div class="l"><span>VAT ${o.vatPct}%</span><span class="num">${fm(o.vat)} ₫</span></div>` : ''}
+    <div class="l t"><span>TỔNG CỘNG</span><span class="num">${fm(o.total)} ₫</span></div>
+    ${o.change ? `<div class="l"><span>Tiền thừa trả khách</span><span class="num" style="color:var(--amber)">${fm(o.change)} ₫</span></div>` : ''}`;
+}
+function draftOrder0() { // như draftOrder nhưng không đẩy món đang gõ vào giỏ (để xem trước)
+  const items = cart.map(i => ({ ...i }));
+  const name = $('f-prod').value.trim(), price = parseInt($('f-price').value, 10);
+  if (name && !isNaN(price)) items.push({ name, qty: Math.max(1, parseInt($('f-qty').value, 10) || 1), price });
+  const c = calc(items, $('f-disc').value, $('f-vat').value, $('f-paid').value);
+  return { id: $('f-id').value.trim() || nextId(), date: $('f-date').value.trim() || fmtDate(), ts: Date.now(),
+    name: $('f-name').value.trim() || 'Khách lẻ', phone: $('f-phone').value.trim(), mst: $('f-mst').value.trim(),
+    items, sub:c.sub, discount:c.discount, vatPct:+$('f-vat').value || 0, vat:c.vat, total:c.total, paid:c.paid, change:c.change,
+    method: $('f-method').value, source:'web' };
+}
+
+/* ============ HÀNH ĐỘNG ============ */
+async function doCopy(silent) {
+  const o = draftOrder(); renderAll();
+  if (!o.items.length) return toast('Chưa có sản phẩm nào!');
+  const ok = await copyText(receiptText(o));
+  if (!silent) toast(ok ? '✅ Đã sao chép hóa đơn — dán (Ctrl+V) vào Zalo/Facebook' : '❌ Trình duyệt chặn copy');
+  return ok;
+}
+function commit(o) { DB.orders.push(o); bumpNext(o.id); save(); }
+async function checkout(mode) {
+  const o = draftOrder();
+  if (!o.items.length) return toast('Chưa có sản phẩm nào!');
+  if (DB.orders.some(x => x.id === o.id)) return toast('⚠️ Mã ' + o.id + ' đã tồn tại, hãy đổi mã khác');
+  if (o.paid < o.total && !confirm('Khách đưa thiếu ' + fm(o.total - o.paid) + ' ₫. Vẫn chốt đơn?')) return;
+  commit(o);
+  if (mode === 'copy') { await copyText(receiptText(o)); toast('✅ Đã chốt ' + o.id + ' & copy hóa đơn'); }
+  clearForm(false);
+  if (mode === 'print') printOrder(o);
+}
+function printOrder(o) { $('printSheet').innerHTML = receiptHTML(o); setTimeout(() => window.print(), 80); }
+function exportCSV() {
+  if (!DB.orders.length) return toast('Chưa có dữ liệu để xuất!');
+  const head = ['Mã HĐ','Ngày giờ','Khách hàng','SĐT','MST','Sản phẩm','Số lượng','Đơn giá','Giảm giá','VAT','Thành tiền','Thanh toán','Nguồn'];
+  const rows = DB.orders.map(o => [o.id, o.date, o.name, o.phone, o.mst, o.items.map(i => `${i.name} (${i.qty}x${i.price})`).join(' | '),
+    o.items.reduce((s, i) => s + i.qty, 0), '', o.discount, o.vat, o.total, o.method, o.source]);
+  const csv = '\uFEFF' + [head, ...rows].map(r => r.map(x => `"${String(x ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  dl(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `DuLieu_DoanhThu_${Date.now()}.csv`);
+}
+function dl(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }
+
+/* ============ LỊCH SỬ / SP / GHI CHÚ ============ */
+function renderStats() {
+  const tk = dayKey(Date.now());
+  const total = DB.orders.reduce((s, o) => s + o.total, 0);
+  const today = DB.orders.filter(o => dayKey(odate(o)) === tk).reduce((s, o) => s + o.total, 0);
+  $('st-today').textContent = fm(today) + ' ₫'; $('st-total').textContent = fm(total) + ' ₫';
+  $('st-count').textContent = DB.orders.length; $('st-avg').textContent = fm(DB.orders.length ? total / DB.orders.length : 0) + ' ₫';
+  const days = []; for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); days.push(d); }
+  const vals = days.map(d => DB.orders.filter(o => dayKey(odate(o)) === dayKey(d)).reduce((s, o) => s + o.total, 0)); const mx = Math.max(...vals, 1);
+  $('chart').innerHTML = days.map((d, i) => `<div class="b" title="${p2(d.getDate())}/${p2(d.getMonth()+1)}: ${fm(vals[i])} ₫"><div class="bar" style="height:${Math.max(3, vals[i] / mx * 100)}%"></div><div class="l">${p2(d.getDate())}</div></div>`).join('');
+}
+function renderHistory() {
+  const q = $('h-search').value.trim().toLowerCase(), day = $('h-day').value;
+  const list = [...DB.orders].reverse().filter(o => {
+    if (day && dayKey(odate(o)) !== day) return false;
+    if (!q) return true;
+    return (o.id + ' ' + o.name + ' ' + o.phone + ' ' + o.mst + ' ' + o.items.map(i => i.name).join(' ')).toLowerCase().includes(q);
+  });
+  $('h-body').innerHTML = list.length ? list.map(o => `<tr>
+    <td><b>${esc(o.id)}</b></td><td class="num">${esc(o.date)}</td><td>${esc(o.name)}</td>
+    <td>${esc(o.phone)}<br><small style="color:var(--muted)">${esc(o.mst)}</small></td>
+    <td>${o.items.map(i => `${esc(i.name)} <small style="color:var(--muted)">(${i.qty} x ${fm(i.price)})</small>`).join('<br>')}</td>
+    <td>${esc(o.method)}</td><td><span class="tag ${o.source === 'telegram' ? 'tg' : 'web'}">${o.source === 'telegram' ? 'Telegram' : 'Web'}</span></td>
+    <td class="money num">${fm(o.total)} ₫</td>
+    <td style="white-space:nowrap"><button class="btn gho sm" onclick="viewOrder('${esc(o.id)}')">👁</button>
+      <button class="btn gho sm" onclick="copyOrder('${esc(o.id)}')">📋</button>
+      <button class="btn gho sm" onclick="delOrder('${esc(o.id)}')">🗑</button></td></tr>`).join('')
+    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:26px">Chưa có đơn nào</td></tr>';
+  $('h-sum').textContent = `Hiển thị ${list.length} đơn · tổng ${fm(list.reduce((s, o) => s + o.total, 0))} ₫`;
+}
+const findOrder = id => DB.orders.find(o => o.id === id);
+function viewOrder(id) { const o = findOrder(id); if (!o) return;
+  $('m-body').innerHTML = receiptHTML(o);
+  $('m-copy').onclick = async () => { await copyText(receiptText(o)); toast('✅ Đã sao chép ' + o.id); };
+  $('m-print').onclick = () => { closeModal(); printOrder(o); }; $('modal').classList.add('on'); }
+function closeModal() { $('modal').classList.remove('on'); }
+async function copyOrder(id) { const o = findOrder(id); if (o) { await copyText(receiptText(o)); toast('✅ Đã sao chép ' + id); } }
+function delOrder(id) { if (!confirm('Xoá đơn ' + id + '? Doanh thu sẽ bị trừ tương ứng.')) return;
+  DB.orders = DB.orders.filter(o => o.id !== id); save(); renderAll(); }
+
+function addProduct() { const name = $('p-name').value.trim(), price = parseMoney($('p-price').value);
+  if (!name || isNaN(price)) return toast('Nhập tên và giá hợp lệ');
+  const ex = DB.products.find(p => p.name.toLowerCase() === name.toLowerCase()); if (ex) ex.price = price; else DB.products.push({ name, price });
+  $('p-name').value = ''; $('p-price').value = ''; save(); renderAll(); }
+function renderProducts() { $('p-body').innerHTML = DB.products.length ? DB.products.map((p, i) => `<tr><td>${esc(p.name)}</td><td class="money num">${fm(p.price)} ₫</td>
+  <td style="text-align:right"><button class="btn gho sm" onclick="delProduct(${i})">🗑</button></td></tr>`).join('')
+  : '<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Chưa có sản phẩm</td></tr>'; }
+function delProduct(i) { DB.products.splice(i, 1); save(); renderAll(); }
+
+function addNote(text, silent) { text = (text ?? $('n-text').value).trim(); if (!text) return toast('Ghi chú trống');
+  DB.notes.unshift({ id: Date.now() + Math.random(), ts: Date.now(), text }); $('n-text').value = ''; save(); renderNotes(); if (!silent) toast('📝 Đã lưu ghi chú'); }
+function renderNotes() { const q = $('n-search').value.trim().toLowerCase();
+  const l = DB.notes.filter(n => !q || n.text.toLowerCase().includes(q));
+  $('n-list').innerHTML = l.length ? l.map(n => `<div class="note"><div><div class="t">${esc(n.text)}</div><small>${fmtDate(new Date(n.ts))}</small></div>
+    <button class="btn gho sm" onclick="delNote('${n.id}')">🗑</button></div>`).join('') : '<p class="hint">Chưa có ghi chú.</p>'; }
+function delNote(id) { DB.notes = DB.notes.filter(n => String(n.id) !== String(id)); save(); renderNotes(); }
+
+/* ============ CÀI ĐẶT / SAO LƯU ============ */
+function loadSettingsUI() { const s = DB.settings;
+  $('s-shop').value = s.shop; $('s-footer').value = s.footer; $('s-prefix').value = s.prefix; $('s-next').value = s.next; $('s-vat').value = s.vat;
+  $('shopLine').textContent = s.shop || 'Bán hàng · Hóa đơn · Telegram Bot'; }
+function saveSettings() { const s = DB.settings;
+  s.shop = $('s-shop').value.trim(); s.footer = $('s-footer').value; s.prefix = ($('s-prefix').value.trim() || 'HD'); s.next = Math.max(1, +$('s-next').value || 1); s.vat = +$('s-vat').value || 0;
+  save(); loadSettingsUI(); $('f-id').value = nextId(); $('f-vat').value = s.vat; renderAll(); toast('💾 Đã lưu cài đặt'); }
+function backup() { dl(new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' }), `POS_backup_${dayKey(Date.now())}.json`); }
+function restore(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
+  r.onload = () => { try { const d = JSON.parse(r.result); if (!Array.isArray(d.orders)) throw new Error('File không đúng định dạng');
+    if (!confirm('Khôi phục sẽ GHI ĐÈ dữ liệu hiện tại. Tiếp tục?')) return;
+    DB = { ...DEF(), ...d, settings: { ...DEF().settings, ...(d.settings || {}) } }; save(); loadSettingsUI(); clearForm(false); renderAll(); toast('✅ Đã khôi phục'); }
+    catch (err) { toast('❌ ' + err.message); } }; r.readAsText(f); e.target.value = ''; }
+function resetAll() { if (!confirm('XOÁ TOÀN BỘ DỮ LIỆU (đơn, sản phẩm, ghi chú, cài đặt)?\n\nHãy sao lưu trước!')) return;
+  DB = DEF(); save(); loadSettingsUI(); clearForm(false); renderAll(); toast('Đã xoá sạch'); }
+
+/* ============ DOANH THU THEO THÁNG ============ */
+const MN = Array.from({ length: 12 }, (_, i) => 'Tháng ' + (i + 1));
+let revYear = new Date().getFullYear(), revMonth = null;
+function yearList() { const ys = new Set([2026, 2027, new Date().getFullYear()]); DB.orders.forEach(o => ys.add(odate(o).getFullYear())); return [...ys].sort(); }
+function monthAgg(y) {
+  const a = Array.from({ length: 12 }, () => ({ n: 0, sum: 0 }));
+  DB.orders.forEach(o => { const d = odate(o); if (d.getFullYear() === y) { a[d.getMonth()].n++; a[d.getMonth()].sum += o.total; } });
+  return a;
+}
+function renderRevenue() {
+  const ys = yearList(); if (!ys.includes(revYear)) revYear = ys.includes(2026) ? 2026 : ys[0];
+  $('r-year').innerHTML = ys.map(y => `<option value="${y}" ${y === revYear ? 'selected' : ''}>Năm ${y}</option>`).join('');
+  const a = monthAgg(revYear), tot = a.reduce((s, x) => s + x.sum, 0), cnt = a.reduce((s, x) => s + x.n, 0);
+  const mx = Math.max(...a.map(x => x.sum), 1), act = a.filter(x => x.n).length, bi = a.reduce((b, x, i) => x.sum > a[b].sum ? i : b, 0);
+  $('r-kpi').innerHTML = [['Doanh thu năm ' + revYear, fm(tot) + ' ₫', 'g'], ['Số đơn', fm(cnt), 'p'], ['Trung bình / tháng', fm(act ? tot / act : 0) + ' ₫', 'c'], ['Tháng cao nhất', tot ? `${MN[bi]} · ${fm(a[bi].sum)} ₫` : '—', '']]
+    .map(([k, v, c]) => `<div class="stat"><div class="k">${k}</div><div class="v ${c} num" style="font-size:1.2rem">${v}</div></div>`).join('');
+  $('r-body').innerHTML = a.map((x, i) => {
+    const prev = i ? a[i - 1].sum : 0; let ch = '—';
+    if (i && prev > 0 && x.n) { const p = (x.sum - prev) / prev * 100; ch = `<span class="${p >= 0 ? 'up' : 'dn'}">${p >= 0 ? '▲' : '▼'} ${Math.abs(p).toFixed(0)}%</span>`; }
+    return `<tr class="mrow ${revMonth === i ? 'sel' : ''}" onclick="revMonth=${i};renderRevenue()"><td><b>${MN[i]}</b></td><td class="num">${x.n}</td>
+      <td class="money num">${fm(x.sum)} ₫</td><td class="num">${fm(x.n ? x.sum / x.n : 0)} ₫</td><td>${ch}</td>
+      <td style="width:26%"><div class="mbar" style="width:${x.sum / mx * 100}%;${x.sum ? '' : 'visibility:hidden'}"></div></td></tr>`;
+  }).join('');
+  $('r-foot').innerHTML = `<tr><td><b>CẢ NĂM ${revYear}</b></td><td class="num"><b>${fm(cnt)}</b></td><td class="money num"><b>${fm(tot)} ₫</b></td><td class="num">${fm(cnt ? tot / cnt : 0)} ₫</td><td></td><td></td></tr>`;
+  // chi tiết theo ngày của tháng đang chọn
+  if (revMonth === null) $('r-detail').innerHTML = '<p class="hint">👆 Bấm vào một tháng để xem doanh thu từng ngày.</p>';
+  else {
+    const days = {}; DB.orders.forEach(o => { const d = odate(o); if (d.getFullYear() === revYear && d.getMonth() === revMonth) { const k = d.getDate(); (days[k] = days[k] || { n: 0, s: 0 }); days[k].n++; days[k].s += o.total; } });
+    const ks = Object.keys(days).map(Number).sort((x, y) => x - y);
+    $('r-detail').innerHTML = `<h2 style="font-size:.95rem">📅 ${MN[revMonth]} / ${revYear} — theo ngày</h2>` + (ks.length
+      ? `<div class="tw"><table style="min-width:360px"><thead><tr><th>Ngày</th><th>Số đơn</th><th>Doanh thu</th></tr></thead><tbody>${ks.map(k => `<tr><td>${p2(k)}/${p2(revMonth + 1)}/${revYear}</td><td class="num">${days[k].n}</td><td class="money num">${fm(days[k].s)} ₫</td></tr>`).join('')}</tbody></table></div>`
+      : '<p class="hint">Tháng này chưa có đơn nào.</p>');
+  }
+  // so sánh các năm
+  const all = ys.map(y => monthAgg(y));
+  $('r-cmp').innerHTML = `<thead><tr><th>Tháng</th>${ys.map(y => `<th>${y}</th>`).join('')}</tr></thead><tbody>${MN.map((m, i) => `<tr><td><b>${m}</b></td>${all.map(a => `<td class="num">${a[i].sum ? `<span class="money">${fm(a[i].sum)}</span>` : '<span style="color:var(--muted)">—</span>'}</td>`).join('')}</tr>`).join('')}</tbody>
+    <tfoot><tr><td><b>Tổng</b></td>${all.map(a => `<td class="money num"><b>${fm(a.reduce((s, x) => s + x.sum, 0))}</b></td>`).join('')}</tr></tfoot>`;
+}
+function exportRevCSV() {
+  const a = monthAgg(revYear);
+  const rows = [['Tháng', 'Số đơn', 'Doanh thu', 'Trung bình/đơn'], ...a.map((x, i) => [MN[i] + '/' + revYear, x.n, x.sum, x.n ? Math.round(x.sum / x.n) : 0]), ['Cả năm', a.reduce((s, x) => s + x.n, 0), a.reduce((s, x) => s + x.sum, 0), '']];
+  dl(new Blob(['﻿' + rows.map(r => r.map(x => `"${x}"`).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' }), `DoanhThu_${revYear}.csv`);
+}
+
+/* ============ ĐỒNG BỘ VỚI BOT (bot.js) ============ */
+let SERVER = false, srvRev = 0, pushT = null, pushing = false, again = false;
+const normDB = d => ({ ...DEF(), ...d, settings: { ...DEF().settings, ...(d.settings || {}) } });
+function localCache() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+function pushSoon() { if (!SERVER) return; clearTimeout(pushT); pushT = setTimeout(push, 350); }
+async function push() {
+  pushT = null; if (pushing) { again = true; return; } pushing = true;
+  try {
+    for (let n = 0; n < 3; n++) {
+      const r = await fetch('api/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseRev: srvRev, state: DB }) });
+      const j = await r.json();
+      if (r.ok) { srvRev = j.rev; break; }
+      if (r.status === 409) { mergeFrom(j.state); srvRev = j.rev; continue; }
+      break;
+    }
+  } catch (e) { /* mất kết nối bot.js: lần sau sẽ đồng bộ lại */ }
+  pushing = false; if (again) { again = false; push(); }
+}
+function mergeFrom(s) { // đơn mới do bot tạo trong lúc web chưa kịp đồng bộ → trộn lại, không mất đơn nào
+  const ids = new Set(DB.orders.map(o => o.id)); (s.orders || []).forEach(o => { if (!ids.has(o.id)) DB.orders.push(o); });
+  DB.orders.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  const nid = new Set(DB.notes.map(n => String(n.id))); (s.notes || []).forEach(n => { if (!nid.has(String(n.id))) DB.notes.push(n); });
+  const pn = new Set(DB.products.map(p => p.name.toLowerCase())); (s.products || []).forEach(p => { if (!pn.has(p.name.toLowerCase())) DB.products.push(p); });
+  DB.settings.next = Math.max(+DB.settings.next || 1, +((s.settings || {}).next) || 1);
+  localCache(); renderAll();
+}
+async function syncPull() {
+  if (!SERVER || pushing || pushT) return;
+  try {
+    const r = await fetch('api/state', { cache: 'no-store' }); const j = await r.json();
+    if (j.rev === srvRev) return;
+    const before = new Set(DB.orders.map(o => o.id)), oldNext = nextId(), cur = $('f-id').value;
+    DB = normDB(j.state); srvRev = j.rev; localCache();
+    if (!document.querySelector('#tab-set.on')) loadSettingsUI();
+    if (!cur || cur === oldNext) $('f-id').value = nextId();
+    const fresh = DB.orders.filter(o => !before.has(o.id));
+    if (fresh.length) toast('🤖 Đơn mới từ Telegram: ' + fresh.map(o => o.id).join(', '));
+    renderAll();
+  } catch (e) { /* bỏ qua */ }
+}
+async function pullStatus() { try { const r = await fetch('api/status', { cache: 'no-store' }); renderBotStatus(await r.json()); } catch (e) { renderBotStatus(null); } }
+function renderBotStatus(s) {
+  let cls, label;
+  if (!s) { cls = 'off'; label = SERVER ? 'Mất kết nối tới bot.js' : 'Chế độ file — chưa chạy bot.js'; }
+  else if (s.running) { cls = 'ok'; label = 'Bot ' + s.bot + ' đang chạy'; }
+  else if (!s.configured) { cls = 'off'; label = 'Chưa có token (config.json)'; }
+  else { cls = 'bad'; label = 'Bot chưa kết nối được Telegram'; }
+  $('tgState').innerHTML = `<span class="tgdot ${cls === 'ok' ? 'on' : ''}"></span>${esc(label)}`;
+  $('bot-status').innerHTML = `<span class="pill ${cls}">${esc(label)}</span> ` + (SERVER ? '<span class="pill ok">Đồng bộ dữ liệu ✓</span>' : '<span class="pill off">Dữ liệu chỉ nằm trong trình duyệt</span>')
+    + (s && s.lastError ? `<pre class="code">${esc(s.lastError)}</pre>` : '') + (s && s.hint ? `<p class="hint">💡 ${esc(s.hint)}</p>` : '')
+    + (s && s.pairing ? '<p class="hint">🔐 Chưa ghép nối: nhắn cho bot <code>/start MÃ</code> (mã 6 số hiện trong cửa sổ chạy bot.js).</p>' : '')
+    + (!SERVER ? '<p class="hint">Bạn đang mở file trực tiếp nên bot không hoạt động ở đây. Chạy <code>bot.js</code> rồi vào <code>http://localhost:3000</code>.</p>' : '');
+}
+async function initServer() {
+  try {
+    const r = await fetch('api/state', { cache: 'no-store' }); if (!r.ok) throw 0;
+    const j = await r.json(); if (!j || !j.state) throw 0;
+    SERVER = true; srvRev = j.rev; const srv = normDB(j.state);
+    const srvEmpty = !srv.orders.length && !srv.products.length && !srv.notes.length, locHas = DB.orders.length || DB.products.length || DB.notes.length;
+    if (srvEmpty && locHas) pushSoon(); else { DB = srv; localCache(); }
+    loadSettingsUI(); clearForm(false); renderAll();
+    setInterval(syncPull, 4000); setInterval(pullStatus, 6000);
+  } catch (e) { SERVER = false; }
+  pullStatus();
+}
+
+/* ============ KHỞI TẠO ============ */
+function renderAll() { renderCart(); renderChips(); renderPreview(); renderStats(); renderHistory(); renderProducts(); renderNotes(); renderRevenue(); }
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + b.dataset.t)); });
+['f-id','f-date','f-name','f-phone','f-mst','f-prod','f-qty','f-price','f-disc','f-vat','f-paid','f-method'].forEach(i => $(i).addEventListener('input', renderPreview));
+$('f-quick').addEventListener('keydown', e => { if (e.key === 'Enter') quickAdd(); });
+['f-prod','f-qty','f-price'].forEach(i => $(i).addEventListener('keydown', e => { if (e.key === 'Enter') addItemFromForm(); }));
+$('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+setInterval(() => { const d = new Date(); $('clock').textContent = `${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}`;
+  $('today').textContent = d.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }); }, 1000);
+
+loadSettingsUI(); clearForm(false); renderAll(); initServer();
+</script>
+</body>
+</html>
