@@ -175,7 +175,7 @@ tfoot td{border-top:2px solid var(--line);border-bottom:0}
 <header class="top">
   <div class="brand">
     <div class="logo">⚡</div>
-    <div><h1>POS SIÊU VIP <span style="color:var(--cyan)">· ALL-IN-ONE</span></h1><small id="shopLine">Bán hàng · Hóa đơn · Telegram Bot</small></div>
+    <div><h1>DOANH THU SẾP VINH <span style="color:var(--cyan)">· YÊU EM NT NHIỀU</span></h1><small id="shopLine">Bán hàng · Hóa đơn · Telegram Bot</small></div>
   </div>
   <div class="clock"><span id="ghState" style="margin-right:14px"></span><span id="tgState"><span class="tgdot"></span>Bot tắt</span><div id="clock">--:--:--</div><small id="today"></small></div>
 </header>
@@ -612,7 +612,7 @@ function receiptHTML(o) {
   if (S.shop) h += `<p class="b" style="font-size:16px">${esc(S.shop)}</p>`;
   if (o.phone) h += `<p>SĐT: ${esc(o.phone)}</p>`;
   if (o.mst) h += `<p>MST: ${esc(o.mst)}</p>`;
-  h += `<p class="b" style="font-size:16px;margin:8px 0 4px">HOÁ ĐƠN BÁN LẺ</p>
+  h += `<p class="b" style="font-size:16px;margin:8px 0 4px">PHIẾU THANH TOÁN DỊCH VỤ</p>
         <p>Số: ${esc(o.id)}</p><p>${esc(o.date)}</p><p>Khách: ${esc(o.name)}</p><div class="d"></div>
         <div class="f"><span>Sản phẩm</span><span>T.Tiền</span></div><div class="d"></div>`;
   if (!o.items.length) h += '<p class="c" style="opacity:.8">(chưa có sản phẩm)</p>';
