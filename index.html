@@ -634,7 +634,7 @@ function receiptText(o) {
   if (S.shop) t.push(S.shop);
   if (o.phone) t.push('SĐT: ' + o.phone);
   if (o.mst) t.push('MST: ' + o.mst);
-  t.push('HOÁ ĐƠN BÁN LẺ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
+  t.push('PHIẾU THANH TOÁN DỊCH VỤ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
   o.items.forEach(i => t.push(i.name, `${fm(i.qty)} x ${fm(i.price)}`, fm(i.qty * i.price)));
   t.push(L);
   if (o.discount || o.vat) { t.push('Tạm tính', fm(o.sub)); if (o.discount) t.push('Giảm giá', '-' + fm(o.discount)); if (o.vat) t.push(`VAT ${o.vatPct}%`, fm(o.vat)); }
@@ -944,7 +944,7 @@ function receiptText(o) {
   if (S.shop) t.push(S.shop);
   if (o.phone) t.push('SĐT: ' + o.phone);
   if (o.mst) t.push('MST: ' + o.mst);
-  t.push('HOÁ ĐƠN BÁN LẺ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
+  t.push('PHIẾU THANH TOÁN DỊCH VỤ', 'Số: ' + o.id, o.date, 'Khách: ' + o.name, L, 'Sản phẩm', 'T.Tiền', L);
   o.items.forEach(i => t.push(i.name, `${fm(i.qty)} x ${fm(i.price)}`, fm(i.qty * i.price)));
   t.push(L);
   if (o.discount || o.vat) { t.push('Tạm tính', fm(o.sub)); if (o.discount) t.push('Giảm giá', '-' + fm(o.discount)); if (o.vat) t.push(`VAT ${o.vatPct}%`, fm(o.vat)); }
